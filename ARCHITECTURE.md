@@ -1,0 +1,886 @@
+# SportStatBot - Comprehensive Architecture Overview
+
+**Project Location:** `/home/user/sportstatbot`  
+**Current Branch:** `claude/cursor-dashboard-ux-011CUwHemdAY4bLzwzfjViC6`  
+**Initial Commit:** `7c8584d - Initial implementation of SportStatBot - Expert sports analysis tool`
+
+---
+
+## 1. PROJECT STRUCTURE & DIRECTORY LAYOUT
+
+### Root Level Files
+```
+sportstatbot/
+├── cli.py                    # Command-line interface entry point
+├── config.py                 # Global configuration settings
+├── report_generator.py       # Main orchestrator for report generation
+├── scheduler.py              # Automated scheduling system
+├── demo_report.py            # Demo report with sample data
+├── requirements.txt          # Python dependencies
+├── README.md                 # Main documentation
+├── USAGE_GUIDE.md           # Quick start guide
+├── .env.example             # Environment variables template
+└── .gitignore               # Git ignore patterns
+```
+
+### Module Directories
+```
+sportstatbot/
+├── data_fetchers/           # API clients for data retrieval
+│   ├── __init__.py
+│   ├── espn_fetcher.py      # ESPN API client
+│   └── odds_fetcher.py      # Betting odds API client
+│
+├── analyzers/               # Data analysis logic
+│   ├── __init__.py
+│   ├── game_analyzer.py     # Game/team trend analysis
+│   └── player_analyzer.py   # Player performance & injuries
+│
+├── formatters/              # Output formatting
+│   ├── __init__.py
+│   └── slack_formatter.py   # Slack markdown formatter
+│
+└── reports/                 # Output directory for saved reports
+    └── .gitkeep            # Directory placeholder
+```
+
+---
+
+## 2. EXISTING UI/INTERFACE COMPONENTS
+
+### 2.1 Current Interface Types
+
+#### **A. Command-Line Interface (CLI)**
+- **File:** `cli.py`
+- **Entry Point:** `python cli.py [options]`
+
+**Key Features:**
+```python
+# Supported Commands
+--all                      # Generate full report for all sports
+--sports nfl nba mlb      # Specify individual sports
+--quick                   # Quick update mode (abbreviated format)
+--output filename.md      # Save to file
+--list-sports            # List all available sports
+```
+
+**Current CLI Capabilities:**
+- Multi-sport selection
+- Quick vs. detailed report modes
+- File output with auto-generated timestamps
+- Help text with examples
+- Graceful error handling with traceback
+
+#### **B. Scheduler Interface**
+- **File:** `scheduler.py`
+- **Type:** Time-based automation
+
+**Features:**
+```python
+# Scheduled Reports
+8:00 AM    # Morning report - full recap + previews
+6:00 PM    # Evening report - today's results
+1:00 PM    # NFL Sunday updates
+4:00 PM    # NFL Sunday updates
+7:00 PM    # NBA evening updates (season-dependent)
+```
+
+**Scheduler Options:**
+- `python scheduler.py` - Run continuous scheduler
+- `python scheduler.py --test` - Run test report immediately
+- `python scheduler.py --webhook <url>` - Override webhook URL
+
+#### **C. Output Formatters**
+- **File:** `formatters/slack_formatter.py`
+
+**Current Format Support:**
+- **Output Type:** Slack-compatible Markdown
+- **Emoji Integration:** 🔥 🏆 ⚠️ 💰 👀 ⭐ ❄️ 📈 📉 etc.
+
+**Formatted Sections:**
+1. Header with date/time
+2. Per-sport sections with:
+   - Key Trends (hot/cold streaks)
+   - Recent Results (notable games)
+   - Standout Performances (player stats)
+   - Injury & Roster Updates
+   - Betting Insights (if configured)
+   - Must-Watch Matchups (upcoming games)
+3. Footer with generation timestamp
+
+### 2.2 Data Presentation Layer
+
+**Current Output Format Example:**
+```markdown
+# 🏆 SPORTS UPDATE - November 8, 2025
+
+## 🏈 NFL UPDATE
+
+### 📈 KEY TRENDS
+**🔥 Hot Teams:**
+• Kansas City Chiefs - 5-game win streak
+• San Francisco 49ers - 4-game win streak
+
+### 📅 RECENT RESULTS
+**Notable Games:**
+• Kansas City Chiefs 31, Buffalo Bills 28 👀
+  _Mahomes: 368 YDS, 3 TD | Allen: 342 YDS, 2 TD_
+
+### ⭐ STANDOUT PERFORMANCES
+• Patrick Mahomes (Chiefs) - 368 passing yards
+• Christian McCaffrey (49ers) - 145 rushing yards
+
+### 💰 BETTING INSIGHTS
+**Value Picks:**
+• Cowboys vs Eagles
+  Cowboys +7.5 (-110) - Better odds than market average
+
+### 👀 MUST-WATCH MATCHUPS
+• Dallas Cowboys vs Philadelphia Eagles - Sun 8:20 PM
+  _Division game, Playoff implications_
+```
+
+---
+
+## 3. DATA MODELS & AGENTS
+
+### 3.1 Core Data Models
+
+#### **A. Sport Configuration Model**
+**Location:** `config.py`
+
+```python
+SPORTS_CONFIG = {
+    'nfl': {
+        'espn_league': 'football/nfl',
+        'display_name': 'NFL',
+        'emoji': '🏈',
+        'season_active': True
+    },
+    'nba': {
+        'espn_league': 'basketball/nba',
+        'display_name': 'NBA',
+        'emoji': '🏀',
+        'season_active': True
+    },
+    # Also: mlb, nhl, mls, soccer, golf
+}
+```
+
+**Configurable Sports:**
+- NFL (football/nfl)
+- NBA (basketball/nba)
+- MLB (baseball/mlb)
+- NHL (hockey/nhl)
+- MLS (soccer/usa.1)
+- Soccer/Premier League (soccer/eng.1)
+- Golf (golf/pga)
+
+#### **B. Game Data Model**
+**Generated by:** `GameAnalyzer._analyze_game()`
+
+```python
+{
+    'id': str,
+    'name': str,                      # "Team1 vs Team2"
+    'date': datetime,
+    'status': str,                    # "Final", "In Progress", etc.
+    'home_team': str,
+    'away_team': str,
+    'home_score': int,
+    'away_score': int,
+    'home_record': str,               # "W-L" format
+    'away_record': str,
+    'winner': str,
+    'loser': str,
+    'winner_score': int,
+    'loser_score': int,
+    'score_differential': int,
+    'is_close': bool,                 # Within 1 score (≤7 points)
+    'is_blowout': bool,               # ≥21 point margin
+    'is_upset': bool,                 # Based on rankings
+    'leaders': {                      # Stat leaders by category
+        'Passing': {'name': str, 'value': str},
+        'Rushing': {'name': str, 'value': str},
+        # ...
+    }
+}
+```
+
+#### **C. Trend Data Model**
+**Generated by:** `GameAnalyzer.analyze_standings()`
+
+```python
+{
+    'type': 'hot_streak' | 'cold_streak',
+    'team': str,
+    'description': str,               # e.g., "5-game win streak"
+    'reason': str                     # Optional context
+}
+```
+
+#### **D. Player Performance Model**
+**Generated by:** `PlayerAnalyzer.extract_standout_players()`
+
+```python
+{
+    'player': str,
+    'team': str,
+    'stat_category': str,             # e.g., "passing", "points"
+    'value': str,                     # e.g., "368 YDS, 3 TD"
+    'game': str,                      # Game name/matchup
+    'date': datetime,
+    'player_id': str
+}
+```
+
+#### **E. Injury/Roster Update Model**
+**Generated by:** `PlayerAnalyzer.analyze_injuries/roster_changes()`
+
+```python
+{
+    'headline': str,
+    'description': str,
+    'link': str,                      # URL to full article
+    'published': datetime,
+    'type': 'injury_update' | 'roster_change'
+}
+```
+
+#### **F. Betting Odds Model**
+**Generated by:** `OddsFetcher.get_odds()` and analyzed by `ReportGenerator._analyze_betting_data()`
+
+```python
+# Raw odds structure
+{
+    'home_team': str,
+    'away_team': str,
+    'bookmakers': [
+        {
+            'title': str,             # Bookmaker name
+            'markets': [
+                {
+                    'key': 'h2h' | 'spreads' | 'totals',
+                    'outcomes': [
+                        {
+                            'name': str,
+                            'point': float,           # Spread/total value
+                            'price': int              # American odds
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+# Analyzed value bets
+{
+    'game': str,
+    'type': 'spread' | 'total',
+    'recommendation': str,            # e.g., "Cowboys +7.5"
+    'bookmaker': str,
+    'odds': int,                      # American odds
+    'reason': str
+}
+```
+
+#### **G. Must-Watch Matchup Model**
+**Generated by:** `GameAnalyzer.find_must_watch_matchups()`
+
+```python
+{
+    'game': str,
+    'date': datetime,
+    'home_team': str,
+    'away_team': str,
+    'reasons': [
+        'Division game',
+        'Playoff implications',
+        'Rivalry game',
+        'Top 25 matchup: #5 vs #10'
+    ],
+    'venue': str                      # Stadium name
+}
+```
+
+#### **H. Complete Sport Data Model**
+**Generated by:** `ReportGenerator._generate_sport_data()`
+
+```python
+{
+    'enabled': bool,
+    'trends': [TrendModel],           # Hot/cold streaks
+    'recent_games': [GameModel],
+    'standout_players': [PlayerModel],
+    'injuries': [InjuryModel],
+    'roster_changes': [RosterModel],
+    'betting_insights': {
+        'value_bets': [BettingModel],
+        'featured_games': [FeaturedOdds]
+    },
+    'must_watch': [MatchupModel]
+}
+```
+
+### 3.2 Analysis Agents/Logic
+
+#### **A. Game Analyzer Agent**
+**File:** `analyzers/game_analyzer.py`
+
+**Key Methods:**
+- `analyze_scoreboard()` - Process game events and extract insights
+- `_analyze_game()` - Analyze single game event
+- `_detect_upset()` - Identify upset wins based on rankings
+- `_extract_leaders()` - Extract stat leaders from competition
+- `analyze_standings()` - Identify team trends and streaks
+- `find_must_watch_matchups()` - Identify significant upcoming games
+
+**Thresholds:**
+```python
+hot_streak_threshold = 3      # wins required for hot streak
+cold_streak_threshold = 3     # losses required for cold streak
+close_game_threshold = 7      # point differential
+blowout_threshold = 21        # point differential
+```
+
+**Analysis Capabilities:**
+- Game outcome determination
+- Score differential classification
+- Upset detection (ranking/record-based)
+- Win/loss streak identification
+- Statistical leader extraction
+- Rivalry and playoff implication detection
+
+#### **B. Player Analyzer Agent**
+**File:** `analyzers/player_analyzer.py`
+
+**Key Methods:**
+- `extract_standout_players()` - Extract top performances
+- `_is_standout_performance()` - Evaluate performance thresholds
+- `analyze_injuries()` - Extract injury information from news
+- `analyze_roster_changes()` - Extract roster moves from news
+- `get_player_summary()` - Create player info summary
+- `_extract_key_stats()` - Extract relevant player statistics
+
+**Performance Thresholds by Sport:**
+```python
+NFL:
+  - passing_yards: 300
+  - rushing_yards: 100
+  - receiving_yards: 100
+  - touchdowns: 3
+
+NBA:
+  - points: 30
+  - rebounds: 12
+  - assists: 10
+  - triple_double: True
+
+MLB:
+  - home_runs: 2
+  - rbis: 4
+  - hits: 3
+  - strikeouts: 10 (pitchers)
+
+NHL:
+  - goals: 2
+  - assists: 3
+  - points: 3
+  - saves: 40 (goalies)
+```
+
+**Injury/Roster Keywords:**
+- Injury: "injured", "hurt", "out", "doubtful", "questionable", "IR", "concussion", etc.
+- Roster: "signed", "traded", "released", "waived", "claimed", "acquired", "promoted", etc.
+
+---
+
+## 4. EXPORT/INTEGRATION CAPABILITIES
+
+### 4.1 Current Export Options
+
+#### **A. File System Export**
+- **Format:** Markdown (.md)
+- **Method:** `ReportGenerator.save_report()`
+- **Features:**
+  - Auto-timestamp in filename if not specified
+  - Saves to `reports/` directory
+  - UTF-8 encoding
+  - Preserves Slack markdown formatting
+
+**Example:**
+```bash
+python cli.py --all --output today_report.md
+# Generates: today_report.md
+# Auto: reports/sports_report_20251108_142530.md
+```
+
+#### **B. Slack Integration**
+- **Type:** Webhook-based posting
+- **Method:** `ReportScheduler.post_to_slack()`
+- **Format:** Slack-compatible Markdown
+
+**Configuration:**
+```python
+# In .env
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+```
+
+**Features:**
+- Posts full formatted reports to Slack
+- Markdown rendering enabled (`mrkdwn: True`)
+- Automatic timestamp in footer
+- Graceful error handling
+
+**Usage:**
+```bash
+python scheduler.py              # Scheduler auto-posts to Slack
+python cli.py --all             # Manual execution (prints to console)
+```
+
+#### **C. Console Output**
+- **Method:** Direct stdout printing
+- **Format:** Slack markdown (renders as formatted text)
+- **Features:**
+  - Full report with separators
+  - Status indicators during generation
+  - Error messages and warnings
+
+### 4.2 Data Source Integrations
+
+#### **A. ESPN API Integration**
+**Class:** `ESPNFetcher` (data_fetchers/espn_fetcher.py)
+
+**Endpoints Used:**
+- `/scoreboard` - Game scores and recent results
+- `/standings` - Team records and streaks
+- `/teams/{id}` - Team information
+- `/news` - Latest news articles
+- `/athletes/{id}` - Player statistics
+- `/schedule` - Upcoming games
+
+**API Configuration:**
+```python
+ESPN_API_BASE = "https://site.api.espn.com/apis/site/v2/sports"
+```
+
+**Data Retrieved:**
+- Scoreboards with game results
+- Team standings and records
+- News articles (injuries, roster changes)
+- Player stats and performance data
+- Schedule information
+
+**Rate Limiting:**
+- Respects API rate limits
+- 0.5 second delay between requests
+- User-Agent headers for identification
+
+#### **B. The Odds API Integration**
+**Class:** `OddsFetcher` (data_fetchers/odds_fetcher.py)
+
+**Endpoints Used:**
+- `/odds` - Betting lines and odds
+
+**Configuration:**
+```python
+ODDS_API_BASE = "https://api.the-odds-api.com/v4"
+ODDS_API_KEY = os.getenv('ODDS_API_KEY', '')
+
+sport_keys = {
+    'nfl': 'americanfootball_nfl',
+    'nba': 'basketball_nba',
+    'mlb': 'baseball_mlb',
+    'nhl': 'icehockey_nhl',
+    'mls': 'soccer_usa_mls',
+    'soccer': 'soccer_epl',
+    'golf': 'golf_pga_championship'
+}
+```
+
+**Markets Supported:**
+- `h2h` - Head-to-head moneyline
+- `spreads` - Point spreads
+- `totals` - Over/under totals
+
+**Odds Format:**
+- American odds format (-110, +150, etc.)
+- Regional filtering (US)
+- Multiple bookmakers
+
+### 4.3 Integration Data Flow
+
+```
+┌─────────────────────────────────────────────────────────┐
+│           External Data Sources                          │
+│  (ESPN API, The Odds API)                               │
+└──────────────────┬──────────────────────────────────────┘
+                   │ fetch_scoreboard(), get_odds(), etc.
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│    Data Fetchers (data_fetchers/)                       │
+│  • ESPNFetcher - Game data, standings, news             │
+│  • OddsFetcher - Betting odds, lines                    │
+└──────────────────┬──────────────────────────────────────┘
+                   │ raw data (JSON)
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│    Analyzers (analyzers/)                               │
+│  • GameAnalyzer - Trends, upsets, highlights            │
+│  • PlayerAnalyzer - Standouts, injuries, roster changes │
+└──────────────────┬──────────────────────────────────────┘
+                   │ analyzed structured data
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│    Report Generator (report_generator.py)               │
+│  Orchestrates data collection, analysis, formatting     │
+└──────────────────┬──────────────────────────────────────┘
+                   │ complete sport data models
+                   ▼
+┌─────────────────────────────────────────────────────────┐
+│    Formatters (formatters/)                             │
+│  • SlackFormatter - Markdown format                     │
+│  • [Future: HTMLFormatter, JSONFormatter, etc.]         │
+└──────────────────┬──────────────────────────────────────┘
+                   │ formatted output
+                   ▼
+┌──────────────────────────────────────────────────────────┐
+│           Output Destinations                            │
+│  • Console (stdout)                                      │
+│  • Markdown Files (reports/)                            │
+│  • Slack Webhooks                                        │
+│  • [Future: Dashboards, APIs, Databases]               │
+└──────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 5. CONFIGURATION & SETUP FILES
+
+### 5.1 Configuration Files
+
+#### **A. Main Configuration (config.py)**
+
+**Purpose:** Centralized configuration for all modules
+
+**Key Configurations:**
+
+```python
+# API Keys (from environment)
+ODDS_API_KEY = os.getenv('ODDS_API_KEY', '')
+
+# Slack Integration
+SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', '')
+
+# Timezone
+REPORT_TIMEZONE = os.getenv('REPORT_TIMEZONE', 'America/New_York')
+
+# API Endpoints
+ESPN_API_BASE = "https://site.api.espn.com/apis/site/v2/sports"
+NHL_API_BASE = "https://statsapi.web.nhl.com/api/v1"
+MLB_API_BASE = "https://statsapi.mlb.com/api/v1"
+ODDS_API_BASE = "https://api.the-odds-api.com/v4"
+
+# Sport Configurations (7 sports currently)
+SPORTS_CONFIG = {
+    'nfl', 'nba', 'mlb', 'nhl', 'mls', 'soccer', 'golf'
+}
+```
+
+#### **B. Environment Variables (.env.example)**
+
+```bash
+# Betting Odds API (optional)
+# Get free key from: https://the-odds-api.com/
+ODDS_API_KEY=your_api_key_here
+
+# Slack Webhook (optional - for automated posting)
+SLACK_WEBHOOK_URL=your_webhook_url_here
+
+# Report Settings
+REPORT_TIMEZONE=America/New_York
+```
+
+**Where Used:**
+- `config.py` loads via `python-dotenv`
+- Referenced by: `ESPNFetcher`, `OddsFetcher`, `ReportScheduler`
+
+### 5.2 Dependencies
+
+**File:** `requirements.txt`
+
+```
+requests==2.31.0              # HTTP requests
+beautifulsoup4==4.12.3        # HTML parsing (if needed)
+python-dateutil==2.8.2        # Date utilities
+pytz==2024.1                  # Timezone handling
+schedule==1.2.0               # Job scheduling
+python-dotenv==1.0.1          # Environment variable loading
+```
+
+**Key Libraries:**
+- **requests** - API calls to ESPN and Odds APIs
+- **schedule** - Cron-like job scheduling
+- **python-dotenv** - Environment variable management
+- **pytz** - Timezone conversions
+- **dateutil** - Date parsing and manipulation
+
+### 5.3 Directory Structure & Outputs
+
+#### **reports/ Directory**
+- **Purpose:** Store saved markdown reports
+- **Current Contents:** `.gitkeep` (empty)
+- **Typical Usage:**
+  ```
+  reports/
+  ├── demo_report.md
+  ├── morning_report_20251108.md
+  ├── evening_report_20251108.md
+  └── sports_report_20251108_142530.md
+  ```
+
+#### **Standard Outputs**
+- **Console:** Printed directly with separators
+- **Files:** Created on-demand with `--output` flag
+- **Slack:** Auto-posted via scheduler (if webhook configured)
+
+---
+
+## 6. ENTRY POINTS & MAIN FLOWS
+
+### 6.1 Command-Line Entry Point
+**File:** `cli.py`
+
+**Main Flow:**
+```python
+1. Parse command-line arguments
+2. Validate arguments (--all or --sports required)
+3. Initialize SportsReportGenerator()
+4. Generate report:
+   - For all sports, or
+   - For specific sport(s), or
+   - Quick update mode
+5. Output:
+   - To console, or
+   - To file (--output), or
+   - Both
+6. Return exit code (0 = success, 1 = error, 130 = interrupted)
+```
+
+**Usage Patterns:**
+```bash
+python cli.py --all                          # Full report
+python cli.py --sports nfl nba               # Multiple sports
+python cli.py --sports nfl --quick           # Quick update
+python cli.py --all --output today.md        # Save to file
+python cli.py --list-sports                  # List available sports
+```
+
+### 6.2 Scheduler Entry Point
+**File:** `scheduler.py`
+
+**Main Flow:**
+```python
+1. Initialize ReportScheduler()
+2. Schedule jobs:
+   - 8:00 AM: morning_report()
+   - 6:00 PM: evening_report()
+   - 1:00 PM Sunday: quick_update('nfl')
+   - 4:00 PM Sunday: quick_update('nfl')
+   - 7:00 PM daily: quick_update('nba')
+3. Enter infinite loop:
+   - Check for pending jobs every 60 seconds
+   - Execute scheduled jobs
+   - Post to Slack if webhook configured
+   - Save to reports/ directory
+4. Handle Ctrl+C for graceful shutdown
+```
+
+**Usage Patterns:**
+```bash
+python scheduler.py                          # Run continuous scheduler
+python scheduler.py --test                   # Test one report
+python scheduler.py --webhook <url>          # Override webhook
+nohup python scheduler.py > scheduler.log &   # Background execution
+```
+
+### 6.3 Report Generator Entry Point
+**File:** `report_generator.py`
+
+**Main Flow:**
+```python
+1. Initialize:
+   - ESPNFetcher()
+   - OddsFetcher()
+   - GameAnalyzer()
+   - PlayerAnalyzer()
+   - SlackFormatter()
+
+2. For each sport:
+   a. Fetch scoreboard (recent games)
+   b. Fetch standings (trends)
+   c. Fetch news (injuries, roster)
+   d. Fetch odds (if API key configured)
+   e. Fetch schedule (upcoming games)
+   f. Analyze all data
+   g. Store in sport_data model
+
+3. Format report:
+   - SlackFormatter.format_full_report()
+   - Returns formatted markdown string
+
+4. Return or save report
+```
+
+### 6.4 Demo Entry Point
+**File:** `demo_report.py`
+
+**Purpose:** Generate demonstration report with sample data
+
+**Flow:**
+```python
+1. Create SlackFormatter()
+2. Create sample data dictionary
+3. Call format_full_report(demo_data)
+4. Print to console
+5. Save to reports/demo_report.md
+```
+
+**Usage:**
+```bash
+python demo_report.py
+```
+
+---
+
+## 7. ERROR HANDLING & RESILIENCE
+
+### 7.1 API Error Handling
+
+**ESPNFetcher:**
+- Try/except around all API calls
+- Returns `None` on failure
+- Prints error messages
+- Continues with next data fetch
+
+**OddsFetcher:**
+- Checks for API key before calling
+- Returns `None` if key missing or API fails
+- Gracefully skips betting insights
+
+### 7.2 Data Validation
+
+**GameAnalyzer:**
+- Validates event structure before processing
+- Checks for required fields (competitors, scores)
+- Returns `None` for malformed data
+- Handles missing streaks, rankings gracefully
+
+**PlayerAnalyzer:**
+- Validates article content before analysis
+- Uses try/except for stat extraction
+- Filters out invalid numeric values
+- Returns empty lists on missing data
+
+### 7.3 Report Generation Safety
+
+**SportsReportGenerator:**
+- Catches errors for each sport individually
+- Prints warnings but continues
+- Returns whatever data is available
+- Doesn't fail on missing API data
+
+---
+
+## 8. EXTENSION POINTS FOR DASHBOARD FEATURES
+
+### 8.1 Potential Integration Areas
+
+**For Custom Dashboard:**
+- Leverage existing `SportsReportGenerator` class
+- Use generated sport data models directly
+- Create new formatter: `HTMLFormatter` or `JSONFormatter`
+- Extend with real-time WebSocket updates
+
+**For Command Palette:**
+- Build command registry from CLI arguments
+- Hook into report generation methods
+- Add fuzzy search over sports/features
+- Support custom queries
+
+**For Story Templates:**
+- Create template system in formatters
+- Store templates as configuration
+- Support user-defined templates
+- Template variables from sport data models
+
+**For Additional UX Features:**
+- Database layer for report history
+- Caching layer for API responses
+- Real-time game update streaming
+- User preferences/customization
+- Historical analysis and trends
+- Team/player comparison tools
+
+### 8.2 Data Model Extensibility
+
+**Add to SPORTS_CONFIG:**
+```python
+'custom_field': value  # For new features
+```
+
+**Extend Analyzer Methods:**
+```python
+# New analysis methods in GameAnalyzer, PlayerAnalyzer
+def analyze_custom_metric(self, data):
+    # Custom analysis logic
+    return results
+```
+
+**Create New Formatters:**
+```python
+# New file: formatters/html_formatter.py
+class HTMLFormatter:
+    def format_full_report(self, all_sports_data):
+        # Generate HTML instead of markdown
+```
+
+---
+
+## 9. KEY ARCHITECTURAL DECISIONS
+
+1. **Separation of Concerns:** Data fetching, analysis, and formatting are separate
+2. **Configuration-Driven:** Sports are config, not hardcoded
+3. **Graceful Degradation:** Missing API keys don't break reports
+4. **Markdown-First:** Slack markdown is primary format (portable)
+5. **Console-Based:** CLI is primary interface (scriptable)
+6. **Stateless:** No database required, reads from APIs
+7. **Async Scheduling:** Separate scheduler for automated reports
+
+---
+
+## 10. CURRENT LIMITATIONS & OPPORTUNITIES
+
+### Limitations:
+- ✗ No persistent data storage (stateless)
+- ✗ No authentication/user management
+- ✗ Only markdown and Slack output formats
+- ✗ No interactive dashboard UI
+- ✗ No historical data tracking
+- ✗ ESPN API is unofficial (fragile)
+
+### Opportunities:
+- ✓ Add database for historical analysis
+- ✓ Create web dashboard/UI
+- ✓ Add command palette for quick access
+- ✓ Build story/template system
+- ✓ Multi-user support with preferences
+- ✓ Real-time game update streaming
+- ✓ Advanced analytics and predictions
+- ✓ Multiple output formats (HTML, JSON, PDF)
+- ✓ Mobile app integration
+
+---
+
+**This overview provides the foundation for implementing dashboard, command palette, story templates, and enhanced UX features while maintaining the existing architecture.**
