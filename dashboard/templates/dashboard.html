@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportStatBot Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .stat:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-running {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status-queued {
+            background: #2196f3;
+            color: white;
+        }
+
+        .status-completed {
+            background: #9c27b0;
+            color: white;
+        }
+
+        .status-failed {
+            background: #f44336;
+            color: white;
+        }
+
+        .sport-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .sport-chip {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .sport-chip:hover {
+            transform: scale(1.05);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+        }
+
+        .task-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .task-item h4 {
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .task-item p {
+            color: #666;
+            font-size: 12px;
+            margin: 3px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+
+        .refresh-button {
+            float: right;
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏆 SportStatBot Dashboard</h1>
+            <p class="subtitle">Automation & Workflow Control Center</p>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <h2>System Status <button class="refresh-button" onclick="refreshStatus()">Refresh</button></h2>
+                <div id="system-status">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Task Queue</h2>
+                <div id="queue-status">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Data Freshness</h2>
+                <div id="freshness-status">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Available Sports</h2>
+                <div id="sports-list">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Rate Limits</h2>
+                <div id="rate-limits">
+                    <div class="loading">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Running Tasks</h2>
+            <div id="running-tasks">
+                <div class="loading">Loading...</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Quick Actions</h2>
+            <div>
+                <button onclick="runDigest('nfl', 'full')">Generate NFL Digest</button>
+                <button onclick="runDigest('nba', 'full')">Generate NBA Digest</button>
+                <button onclick="runDigest('mlb', 'full')">Generate MLB Digest</button>
+                <button class="btn-success" onclick="refreshAllData()">Refresh All Data</button>
+                <button class="btn-danger" onclick="stopAllTasks()">Stop All Tasks</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '';
+
+        async function fetchAPI(endpoint) {
+            const response = await fetch(API_BASE + endpoint);
+            return response.json();
+        }
+
+        async function postAPI(endpoint, data = {}) {
+            const response = await fetch(API_BASE + endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        }
+
+        async function refreshStatus() {
+            const status = await fetchAPI('/api/status');
+            const html = `
+                <div class="stat">
+                    <span class="stat-label">System Status</span>
+                    <span class="status-badge status-running">${status.status}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Task Queue</span>
+                    <span class="status-badge status-${status.services.task_queue}">${status.services.task_queue}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Freshness Monitor</span>
+                    <span class="status-badge status-${status.services.freshness_monitor}">${status.services.freshness_monitor}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Last Updated</span>
+                    <span class="stat-value">${new Date(status.timestamp).toLocaleTimeString()}</span>
+                </div>
+            `;
+            document.getElementById('system-status').innerHTML = html;
+        }
+
+        async function refreshQueueStatus() {
+            const stats = await fetchAPI('/api/queue/status');
+            const html = `
+                <div class="stat">
+                    <span class="stat-label">Queued</span>
+                    <span class="stat-value">${stats.queued}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Running</span>
+                    <span class="stat-value">${stats.running}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Completed</span>
+                    <span class="stat-value">${stats.completed}</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Failed</span>
+                    <span class="stat-value">${stats.failed}</span>
+                </div>
+            `;
+            document.getElementById('queue-status').innerHTML = html;
+        }
+
+        async function refreshFreshness() {
+            const report = await fetchAPI('/api/freshness');
+            let html = '';
+
+            for (const [sport, data] of Object.entries(report.sports || {})) {
+                const generalData = data.general || {};
+                const isStale = generalData.is_stale;
+                const ageMinutes = Math.round(generalData.age_minutes || 0);
+
+                html += `
+                    <div class="stat">
+                        <span class="stat-label">${sport.toUpperCase()}</span>
+                        <span class="stat-value ${isStale ? 'text-danger' : 'text-success'}">
+                            ${ageMinutes}m ${isStale ? '⚠️' : '✅'}
+                        </span>
+                    </div>
+                `;
+            }
+
+            document.getElementById('freshness-status').innerHTML = html || '<p>No data</p>';
+        }
+
+        async function refreshSportsList() {
+            const sports = await fetchAPI('/api/sports');
+            const html = `
+                <div class="sport-list">
+                    ${sports.map(sport => `
+                        <div class="sport-chip" onclick="runDigest('${sport.key}', 'full')">
+                            ${sport.emoji} ${sport.name}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('sports-list').innerHTML = html;
+        }
+
+        async function refreshRateLimits() {
+            const limits = await fetchAPI('/api/rate-limits');
+            let html = '';
+
+            for (const [api, data] of Object.entries(limits)) {
+                const perMinute = data.usage?.per_minute || {};
+                const percentage = Math.round(perMinute.percentage || 0);
+
+                html += `
+                    <div class="stat">
+                        <span class="stat-label">${api}</span>
+                        <div style="flex: 1; margin: 0 10px;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                        <span class="stat-value">${perMinute.used}/${perMinute.limit}</span>
+                    </div>
+                `;
+            }
+
+            document.getElementById('rate-limits').innerHTML = html || '<p>No data</p>';
+        }
+
+        async function refreshRunningTasks() {
+            const tasks = await fetchAPI('/api/queue/tasks');
+            const running = tasks.running || [];
+
+            if (running.length === 0) {
+                document.getElementById('running-tasks').innerHTML = '<p>No running tasks</p>';
+                return;
+            }
+
+            const html = `
+                <div class="task-list">
+                    ${running.map(task => `
+                        <div class="task-item">
+                            <h4>${task.name}</h4>
+                            <p>Sport: ${task.sport || 'N/A'}</p>
+                            <p>Status: <span class="status-badge status-${task.status}">${task.status}</span></p>
+                            <p>Attempts: ${task.attempts}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('running-tasks').innerHTML = html;
+        }
+
+        async function runDigest(sport, type) {
+            try {
+                const result = await postAPI('/api/digest/run', { sport, type });
+                alert(`Digest queued for ${sport.toUpperCase()}: ${result.task_id}`);
+                refreshAll();
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+        }
+
+        async function refreshAllData() {
+            const sports = await fetchAPI('/api/sports');
+            for (const sport of sports) {
+                await postAPI(`/api/freshness/${sport.key}/refresh`);
+            }
+            alert('Data refresh triggered for all sports');
+            refreshAll();
+        }
+
+        function stopAllTasks() {
+            if (confirm('Are you sure you want to stop all tasks?')) {
+                alert('Stop all tasks functionality coming soon');
+            }
+        }
+
+        async function refreshAll() {
+            await Promise.all([
+                refreshStatus(),
+                refreshQueueStatus(),
+                refreshFreshness(),
+                refreshSportsList(),
+                refreshRateLimits(),
+                refreshRunningTasks()
+            ]);
+        }
+
+        // Initial load
+        refreshAll();
+
+        // Auto-refresh every 10 seconds
+        setInterval(refreshAll, 10000);
+    </script>
+</body>
+</html>
