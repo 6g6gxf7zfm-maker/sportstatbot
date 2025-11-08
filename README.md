@@ -21,6 +21,25 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 - **Betting Insights** 💰 - Point spreads, over/unders, value picks
 - **Must-Watch Matchups** 👀 - Upcoming games you can't miss
 
+### 📈 Visualization & Reporting (NEW!)
+- **Auto-Generated Charts** - Beautiful matplotlib/Plotly visualizations
+- **Rolling Ratings** - OffRtg/DefRtg trends over time
+- **Shot Heatmaps** - Basketball, hockey, and soccer spatial analysis
+- **Expected vs Actual** - Goals, points, and performance metrics
+- **Spread Analysis** - Fair line vs actual spread deltas
+- **Team Radar Plots** - Multi-metric performance across 6+ axes
+- **Form Pulse Graphs** - Green/red win/loss trend indicators
+- **Season Progress Bars** - Track progress toward playoffs/targets
+- **Win Probability** - Game-by-game probability timelines
+- **Line Movement** - Opening vs closing betting line charts
+- **Momentum Gauges** - Visual dial for upcoming matchups
+- **League Parity Charts** - Standard deviation of team strength
+- **Injury Cluster Maps** - Visual representation of injuries per team
+- **Top Edges** - Automated betting value identification charts
+- **Player Cards** - Custom player card generator with stats and bio
+- **Interactive Dashboards** - HTML dashboards with all visualizations
+- **Notion Export** - Export charts to Notion-compatible format
+
 ### 🤖 Flexible Usage
 - **On-Demand Reports** - Generate reports whenever you want
 - **Automated Scheduling** - Daily morning and evening updates
@@ -88,6 +107,44 @@ python cli.py --all --output today_report.md
 ```bash
 python cli.py --list-sports
 ```
+
+### Visualization CLI
+
+#### Generate Demo Visualizations
+```bash
+# Generate all demo charts for NBA
+python visualization_cli.py --demo --sport nba
+
+# For other sports
+python visualization_cli.py --demo --sport nfl
+python visualization_cli.py --demo --sport mlb
+```
+
+#### Generate Custom Charts
+```bash
+# Team radar chart
+python visualization_cli.py --chart-type team_radar \
+  --team-name "Lakers" \
+  --metrics "Offense=85,Defense=78,Rebounding=72"
+
+# Form pulse chart
+python visualization_cli.py --chart-type form_pulse \
+  --team-name "Warriors" \
+  --results "WWLWWLW"
+
+# Season progress
+python visualization_cli.py --chart-type season_progress \
+  --team-name "Celtics" \
+  --wins 45 --losses 20 --target-wins 50
+```
+
+#### Run Example Scripts
+```bash
+# Run all visualization examples
+python examples/visualization_examples.py
+```
+
+See [VISUALIZATION_GUIDE.md](VISUALIZATION_GUIDE.md) for comprehensive documentation.
 
 ### Automated Scheduling
 
@@ -260,6 +317,7 @@ ESPN's unofficial API sometimes blocks requests or has rate limits. This is norm
 ```
 sportstatbot/
 ├── cli.py                      # Command-line interface
+├── visualization_cli.py        # Visualization CLI
 ├── scheduler.py                # Automated report scheduler
 ├── report_generator.py         # Main report orchestrator
 ├── config.py                   # Configuration settings
@@ -271,7 +329,22 @@ sportstatbot/
 │   └── player_analyzer.py     # Player stats analysis
 ├── formatters/                # Output formatting
 │   └── slack_formatter.py     # Slack markdown
-└── reports/                   # Saved reports
+├── visualizers/               # Visualization system
+│   ├── base_chart.py          # Base chart generator
+│   ├── rating_charts.py       # Rating visualizations
+│   ├── spatial_charts.py      # Heatmaps and spatial charts
+│   ├── comparison_charts.py   # Comparison visualizations
+│   ├── radar_charts.py        # Radar plots
+│   ├── trend_charts.py        # Trend and progress charts
+│   ├── betting_charts.py      # Betting analysis charts
+│   ├── player_cards.py        # Player card generator
+│   ├── dashboard_generator.py # HTML dashboard creator
+│   └── visualization_manager.py # Central coordinator
+├── examples/                  # Example scripts
+│   └── visualization_examples.py
+├── reports/                   # Saved reports
+├── charts/                    # Generated charts
+└── dashboards/                # Generated dashboards
 ```
 
 ### Adding New Features
