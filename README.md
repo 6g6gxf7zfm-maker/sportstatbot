@@ -21,6 +21,25 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 - **Betting Insights** 💰 - Point spreads, over/unders, value picks
 - **Must-Watch Matchups** 👀 - Upcoming games you can't miss
 
+### 🎯 Predictive Modeling & Simulation (NEW!)
+- **Monte Carlo Engine** - 10,000 simulations per game for win probabilities
+- **Power Ratings** - Elo-like team strength tracking with daily updates
+- **Season Projections** - Win total forecasts and playoff odds
+- **Upset Detector** - Flags potential shocking results
+- **Dynamic Spreads** - Fair point spread calculations with hourly updates
+- **Player Props** - Points/rebounds/assists predictions
+- **Injury Impact** - Expected drop-off from injuries
+- **Momentum Tracking** - Back-to-back game impacts
+- **Fatigue Analysis** - Performance decay from rest
+- **Travel Penalties** - Distance and time zone impacts
+- **Heat Surge Alerts** - Teams outperforming expectations
+- **Coaching Watch** - Firing probability predictions
+- **Bounce-Back Candidates** - Player regression analysis
+- **Playoff Simulator** - Bracket simulations with championship odds
+- **Betting Edge Tracker** - Historical accuracy and ROI tracking
+
+See [MODELING_GUIDE.md](MODELING_GUIDE.md) for complete documentation.
+
 ### 🤖 Flexible Usage
 - **On-Demand Reports** - Generate reports whenever you want
 - **Automated Scheduling** - Daily morning and evening updates
@@ -88,6 +107,41 @@ python cli.py --all --output today_report.md
 ```bash
 python cli.py --list-sports
 ```
+
+### Predictive Modeling & Simulations
+
+Run advanced predictions and simulations:
+
+```bash
+# Predict a specific game with 10,000 Monte Carlo simulations
+python predict.py --game "Lakers vs Celtics" --sport nba
+
+# Generate season-long win total projections
+python predict.py --season-projection --sport nfl
+
+# Detect potential upset games
+python predict.py --upset-detector --sport nba
+
+# Find betting value edges
+python predict.py --betting-edges --sport nfl
+
+# Player prop predictions
+python predict.py --player-props "LeBron James" --sport nba
+
+# Calculate playoff probabilities
+python predict.py --playoff-odds --sport nba
+
+# Detect teams in heat surges
+python predict.py --heat-surge --sport nfl
+
+# Identify coaches on hot seat
+python predict.py --coaching-watch --sport nfl
+
+# Find bounce-back candidates
+python predict.py --bounce-back --sport nba
+```
+
+**See [MODELING_GUIDE.md](MODELING_GUIDE.md) for comprehensive documentation on all predictive features.**
 
 ### Automated Scheduling
 
