@@ -28,6 +28,19 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 - **Quick Updates** - Fast summaries for busy schedules
 - **Slack Integration** - Post directly to Slack channels
 
+### 📚 Knowledge Management System (NEW!)
+- **Hierarchical Organization** - Google Drive-style folder structure
+- **Smart Tagging** - Auto-tag documents by content type and topics
+- **Advanced Search** - Find documents by text, stats, players, teams
+- **Quick Recall** - Instantly find last mentions of any player/team
+- **Story Linking** - Automatic cross-referencing of related content
+- **Version Control** - Track document history and revisions
+- **Editor Dashboard** - Task management and workflow tracking
+- **Export Tools** - Generate PDFs, briefings, and reports
+- **Archive Management** - Auto-archive and organize old content
+
+👉 **[Full Knowledge Management Documentation →](KNOWLEDGE_MANAGEMENT.md)**
+
 ## Installation
 
 ### Prerequisites
@@ -41,9 +54,13 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
    pip install -r requirements.txt
    ```
 
-2. **Try the demo** (see what reports look like)
+2. **Try the demos**
    ```bash
+   # Sports report demo
    python demo_report.py
+
+   # Knowledge management system demo
+   python demo_knowledge.py
    ```
 
 3. **Configure API keys** (optional - for betting data and Slack)
@@ -260,6 +277,7 @@ ESPN's unofficial API sometimes blocks requests or has rate limits. This is norm
 ```
 sportstatbot/
 ├── cli.py                      # Command-line interface
+├── knowledge_cli.py            # Knowledge management CLI
 ├── scheduler.py                # Automated report scheduler
 ├── report_generator.py         # Main report orchestrator
 ├── config.py                   # Configuration settings
@@ -271,6 +289,13 @@ sportstatbot/
 │   └── player_analyzer.py     # Player stats analysis
 ├── formatters/                # Output formatting
 │   └── slack_formatter.py     # Slack markdown
+├── knowledge_manager/         # Knowledge management system
+│   ├── document_manager.py    # Document CRUD
+│   ├── search_engine.py       # Advanced search
+│   ├── quick_recall.py        # Player/team lookup
+│   ├── story_memory_map.py    # Story linking
+│   ├── dashboard.py           # Editor dashboard
+│   └── ...                    # More modules
 └── reports/                   # Saved reports
 ```
 
@@ -307,6 +332,23 @@ python cli.py --sports nfl nba nhl
 python scheduler.py
 # Now get reports at 8 AM and 6 PM daily
 ```
+
+### Example 5: Knowledge Management
+```bash
+# Search for content
+python knowledge_cli.py search "Patrick Mahomes" --league nfl
+
+# Quick recall player mentions
+python knowledge_cli.py recall "LeBron James" --limit 5 --timeline
+
+# View editor dashboard
+python knowledge_cli.py dashboard --weekly
+
+# Export weekly briefing
+python knowledge_cli.py export --weekly --league nfl
+```
+
+See [KNOWLEDGE_MANAGEMENT.md](KNOWLEDGE_MANAGEMENT.md) for complete documentation.
 
 ## Contributing
 
