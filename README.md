@@ -28,6 +28,18 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 - **Quick Updates** - Fast summaries for busy schedules
 - **Slack Integration** - Post directly to Slack channels
 
+### 🔧 Enterprise Operations (NEW!)
+- **Automated Pipeline** - Hourly data refresh with incremental caching
+- **Health Monitoring** - Track data freshness and API status
+- **Error Recovery** - Automatic retry with exponential backoff
+- **Rate Limiting** - API-friendly request management
+- **Smart Throttling** - Event-based update frequency (Super Bowl, Finals, etc.)
+- **Offline Mode** - Continue with cached data when APIs are down
+- **Backup System** - Rolling backups to Google Drive, iCloud, S3
+- **Data Retention** - Automatic cleanup with configurable policies
+- **Google Sheets Bridge** - Manual overrides and collaborative editing
+- **Monitoring Dashboard** - Real-time health reports and heatmaps
+
 ## Installation
 
 ### Prerequisites
@@ -126,6 +138,39 @@ To post reports directly to Slack:
    python scheduler.py
    # Reports will automatically post to your Slack channel
    ```
+
+### Operations Manager (NEW!)
+
+Manage data pipeline, monitoring, and backups:
+
+```bash
+# Check system health
+python operations_manager.py --health-check
+
+# Run daily operations (cleanup, backup, reports)
+python operations_manager.py --daily-ops
+
+# Interactive management menu
+python operations_manager.py --interactive
+
+# Generate master report
+python operations_manager.py --master-report
+```
+
+**Features:**
+- 📊 Real-time health monitoring and freshness heatmaps
+- 🔄 Automated data refresh with incremental caching
+- 🔧 Error recovery with automatic retries
+- 💾 Automated backups to local, cloud (S3/GCS), and iCloud
+- 📈 Smart throttling during major events
+- 📡 Offline mode with cached data fallback
+- 🗂️ Automatic data retention and cleanup
+
+**Quick Start:**
+See **[OPERATIONS_QUICKSTART.md](OPERATIONS_QUICKSTART.md)** for 30-second guide
+
+**Full Documentation:**
+See **[OPERATIONS_GUIDE.md](OPERATIONS_GUIDE.md)** for complete operations guide
 
 ## Configuration
 
