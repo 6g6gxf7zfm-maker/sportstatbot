@@ -308,6 +308,23 @@ python scheduler.py
 # Now get reports at 8 AM and 6 PM daily
 ```
 
+## 🧠 Advanced Analytics & ML Models
+
+SportStatBot now includes sophisticated data science features! Check out:
+
+- **[DATA_SCIENCE_ROADMAP.md](DATA_SCIENCE_ROADMAP.md)** - Comprehensive roadmap of ML features
+- **[ml_models/](ml_models/)** - Machine learning models and analytics
+  - **Performance Stability Index** - Measure player consistency
+  - **Travel Fatigue Model** - Quantify travel impact on performance
+  - **And many more planned features!**
+
+**Try the ML demo:**
+```bash
+python ml_demo.py
+```
+
+See `ml_models/README.md` for implementation details and developer guide.
+
 ## Contributing
 
 Feel free to extend and customize for your needs! Some ideas:
@@ -316,7 +333,7 @@ Feel free to extend and customize for your needs! Some ideas:
 - Integrate with Discord or other platforms
 - Add historical trend analysis
 - Create web dashboard
-- Add ML predictions
+- Implement ML models from the roadmap
 
 ## License
 

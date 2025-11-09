@@ -1,0 +1,12 @@
+# Ignore trained model artifacts
+*.pkl
+*.h5
+*.pth
+*.pt
+*.ckpt
+*.pb
+*.joblib
+
+# Keep this directory structure
+!.gitignore
+!README.md
