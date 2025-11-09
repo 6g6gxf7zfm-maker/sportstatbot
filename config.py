@@ -13,6 +13,18 @@ SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', '')
 # Report Settings
 REPORT_TIMEZONE = os.getenv('REPORT_TIMEZONE', 'America/New_York')
 
+# Document Management Settings
+GOOGLE_CREDENTIALS_PATH = os.getenv('GOOGLE_CREDENTIALS_PATH', 'credentials.json')
+GOOGLE_TOKEN_PATH = os.getenv('GOOGLE_TOKEN_PATH', 'token.pickle')
+GOOGLE_DOCS_ROOT_FOLDER = os.getenv('GOOGLE_DOCS_ROOT_FOLDER', 'SportStatBot Reports')
+APPLE_NOTES_STORAGE_DIR = os.getenv('APPLE_NOTES_STORAGE_DIR', './apple_notes_data')
+
+# Document Automation Settings
+AUTO_ARCHIVE_DAYS = int(os.getenv('AUTO_ARCHIVE_DAYS', '30'))
+ENABLE_AUTO_SUMMARY = os.getenv('ENABLE_AUTO_SUMMARY', 'true').lower() == 'true'
+DEFAULT_AUTHOR = os.getenv('DEFAULT_AUTHOR', 'SportStatBot EIC')
+OFFLINE_CACHE_DAYS = int(os.getenv('OFFLINE_CACHE_DAYS', '30'))
+
 # API Endpoints
 ESPN_API_BASE = "https://site.api.espn.com/apis/site/v2/sports"
 NHL_API_BASE = "https://statsapi.web.nhl.com/api/v1"

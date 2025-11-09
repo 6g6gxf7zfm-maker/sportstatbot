@@ -28,6 +28,19 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 - **Quick Updates** - Fast summaries for busy schedules
 - **Slack Integration** - Post directly to Slack channels
 
+### 📁 Document Automation (NEW!)
+- **Google Docs Integration** - Auto-publish to organized Google Docs folders
+- **Apple Notes Support** - Create and manage notes across all Apple devices
+- **Smart Organization** - Per-league folders with Digests, Features, Previews, Betting
+- **Auto-Tagging** - Date tags, keywords, metadata
+- **Cross-Linking** - Link documents and notes together
+- **PDF Export** - Batch export for print/archival
+- **Auto-Archival** - Move old content to archive folders
+- **Weekly Summaries** - "This Week in Sports" aggregation notes
+- **Offline Sync** - Cache notes locally for offline access
+
+See [DOCUMENT_AUTOMATION_GUIDE.md](DOCUMENT_AUTOMATION_GUIDE.md) for complete documentation.
+
 ## Installation
 
 ### Prerequisites
@@ -271,6 +284,10 @@ sportstatbot/
 │   └── player_analyzer.py     # Player stats analysis
 ├── formatters/                # Output formatting
 │   └── slack_formatter.py     # Slack markdown
+├── document_managers/         # Document automation (NEW!)
+│   ├── google_docs_manager.py # Google Docs integration
+│   ├── apple_notes_manager.py # Apple Notes integration
+│   └── document_orchestrator.py # Unified interface
 └── reports/                   # Saved reports
 ```
 
