@@ -11,6 +11,9 @@ A **secure, private web application** for sports analysis AI system. This dashbo
 - **Export Integration**: Export stories to Google Docs and Apple Notes
 - **Dark Mode**: Full dark/light theme support
 - **Audit Logging**: Track all user actions in SQLite database
+- **📱 Mobile App (PWA)**: Install on iOS/Android as a native app
+- **🔄 Offline Support**: Service worker for offline functionality
+- **📲 Responsive Design**: Optimized for phones, tablets, and desktop
 
 ## Tech Stack
 

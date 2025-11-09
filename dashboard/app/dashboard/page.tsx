@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
+import MobileNav from '@/components/MobileNav';
+import InstallPrompt from '@/components/InstallPrompt';
 import { FileText, TrendingUp, Clock, ExternalLink } from 'lucide-react';
 
 interface Digest {
@@ -56,13 +58,17 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-950">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <MobileNav />
+      <div className="hidden lg:flex">
+        <Sidebar />
+      </div>
+      <div className="flex-1 flex flex-col overflow-hidden pt-16 lg:pt-0">
         <Header
           title="Dashboard"
           description="Your latest sports intelligence reports"
         />
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+          <InstallPrompt />
           {/* Stats Overview */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-200 dark:border-gray-800">

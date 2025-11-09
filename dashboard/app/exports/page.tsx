@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
+import MobileNav from '@/components/MobileNav';
 import { FileText, ExternalLink, Download } from 'lucide-react';
 
 interface Export {
@@ -80,13 +81,16 @@ export default function Exports() {
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-950">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <MobileNav />
+      <div className="hidden lg:flex">
+        <Sidebar />
+      </div>
+      <div className="flex-1 flex flex-col overflow-hidden pt-16 lg:pt-0">
         <Header
           title="Exports"
           description="Export stories to Google Docs and Apple Notes"
         />
-        <main className="flex-1 overflow-y-auto p-8">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8">
           {/* Export Form */}
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow border border-gray-200 dark:border-gray-800 p-6 mb-8">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
