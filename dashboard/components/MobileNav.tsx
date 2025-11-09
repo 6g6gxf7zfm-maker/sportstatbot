@@ -11,19 +11,19 @@ import {
   PlayCircle,
   FileText,
   LogOut,
-  Football,
-  Basketball,
-  BaseballBat,
-  Hockey,
-  Volleyball,
+  Trophy,
+  Target,
+  Star,
+  Zap,
+  Circle,
 } from 'lucide-react';
 
 const leagues = [
-  { name: 'NFL', icon: Football },
-  { name: 'NBA', icon: Basketball },
-  { name: 'MLB', icon: BaseballBat },
-  { name: 'NHL', icon: Hockey },
-  { name: 'MLS', icon: Volleyball },
+  { name: 'NFL', icon: Trophy },
+  { name: 'NBA', icon: Target },
+  { name: 'MLB', icon: Star },
+  { name: 'NHL', icon: Zap },
+  { name: 'MLS', icon: Circle },
 ];
 
 const navigation = [

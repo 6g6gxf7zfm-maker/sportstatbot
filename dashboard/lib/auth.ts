@@ -13,7 +13,11 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         // In production, verify password properly
         // This is a simplified version for demo
-        if (credentials?.email === process.env.OWNER_EMAIL) {
+        if (!credentials?.email) {
+          return null;
+        }
+
+        if (credentials.email === process.env.OWNER_EMAIL) {
           return {
             id: "owner",
             email: credentials.email,
