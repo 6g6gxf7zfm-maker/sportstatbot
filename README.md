@@ -28,6 +28,17 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 - **Quick Updates** - Fast summaries for busy schedules
 - **Slack Integration** - Post directly to Slack channels
 
+### 🎮 User Control Interface (NEW!)
+- **Interactive Commands** - Generate digests, export reports, control all features
+- **League Toggles** - Enable/disable leagues on the fly
+- **Priority Ranking** - Set manual priorities (e.g., "NBA > NHL tonight")
+- **Data Window Control** - Choose 3, 5, 10 day lookback periods
+- **Output Length Sliders** - Brief, medium, or in-depth reports
+- **Performance Dashboard** - Monitor agent runs, success rates, timeliness
+- **Manual Editor Notes** - Add human notes before publishing
+- **Experiment Mode** - Safely test new prompt variations
+- **Workflow Archive** - Version control with detailed notes
+
 ## Installation
 
 ### Prerequisites
@@ -126,6 +137,56 @@ To post reports directly to Slack:
    python scheduler.py
    # Reports will automatically post to your Slack channel
    ```
+
+### Interactive Control Interface 🎮
+
+Take full control of SportStatBot with the interactive interface:
+
+```bash
+# Start interactive mode
+python interactive_control.py
+
+# Or execute single commands
+python interactive_control.py --status
+python interactive_control.py --dashboard
+python interactive_control.py --command "generate-all"
+```
+
+**Key Features:**
+
+- **Quick Commands**: `generate-all`, `export-24h`, `status`
+- **League Control**: `toggle nfl`, `priority nfl nba mlb`
+- **Customization**: `window 5`, `length in-depth`
+- **Dashboard**: Real-time metrics and performance tracking
+- **Experiments**: Test prompt variations safely
+- **Archive**: Version control for workflows
+- **Manual Notes**: Add editor notes before publishing
+
+**Example Session:**
+
+```
+sportstat> status
+# Shows enabled leagues, settings, recent activity
+
+sportstat> toggle mlb
+✅ ⚾ MLB (mlb) is now disabled
+
+sportstat> priority nfl nba nhl
+✅ Priority ranking updated: nfl > nba > nhl
+
+sportstat> window 5
+✅ Data window set to 5 days
+
+sportstat> generate-all
+✅ Generating digests for 6 leagues: nfl, nba, nhl, mls, soccer, golf
+
+sportstat> dashboard
+# Shows full performance dashboard
+
+sportstat> exit
+```
+
+See the complete [USER_CONTROL_GUIDE.md](USER_CONTROL_GUIDE.md) for all features and commands.
 
 ## Configuration
 
