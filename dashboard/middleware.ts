@@ -11,8 +11,14 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api/auth') ||
     pathname.startsWith('/auth') ||
-    pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js)$/)
+    pathname.match(/\.(png|jpg|jpeg|gif|svg|ico|css|js|json|manifest)$/)
   ) {
+    return NextResponse.next();
+  }
+
+  // If NEXTAUTH_SECRET is not configured, allow access (setup mode)
+  if (!process.env.NEXTAUTH_SECRET || process.env.NEXTAUTH_SECRET === 'change-this-to-a-random-secret-min-32-chars') {
+    console.warn('NEXTAUTH_SECRET not configured - running in setup mode');
     return NextResponse.next();
   }
 
