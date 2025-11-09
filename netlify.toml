@@ -1,4 +1,4 @@
-# Netlify Deploy Configuration
+# Netlify configuration for Next.js
 [build]
   base = "dashboard"
   command = "npm run build"
@@ -6,13 +6,11 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NEXT_TELEMETRY_DISABLED = "1"
+  NPM_FLAGS = "--legacy-peer-deps"
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-  force = false
+# Enable Next.js Runtime for Netlify
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[headers]]
   for = "/*"
