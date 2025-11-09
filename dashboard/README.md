@@ -2,6 +2,12 @@
 
 A **secure, private web application** for sports analysis AI system. This dashboard displays sports digests, features, and reports, with seamless export capabilities to Google Docs and Apple Notes.
 
+## 🚀 Quick Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/6g6gxf7zfm-maker/sportstatbot&project-name=sports-dashboard&repository-name=sports-dashboard&root-directory=dashboard)
+
+**Want to see it on mobile NOW?** → [Quick Deploy Guide](./README-QUICK-DEPLOY.md)
+
 ## Features
 
 - **Private Access**: Restricted to owner email only with NextAuth authentication
