@@ -1,6 +1,20 @@
+# Core dependencies
 requests==2.31.0
 beautifulsoup4==4.12.3
 python-dateutil==2.8.2
 pytz==2024.1
 schedule==1.2.0
 python-dotenv==1.0.1
+
+# Visualization and chart generation
+matplotlib>=3.7.0
+numpy>=1.24.0
+pillow>=10.0.0
+
+# PDF generation
+markdown>=3.5.0
+weasyprint>=60.0
+pypdf2>=3.0.0
+
+# Enhanced formatting
+colorama>=0.4.6

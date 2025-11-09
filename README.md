@@ -28,6 +28,19 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 - **Quick Updates** - Fast summaries for busy schedules
 - **Slack Integration** - Post directly to Slack channels
 
+### 🎨 Creative & Presentation Features (NEW!)
+- **Style Themes** - ESPN, The Athletic, FiveThirtyEight, or Bleacher Report styles
+- **Tone Calibration** - Professional to fun emoji/language levels
+- **Dynamic Colors** - Terminal color coding for team streaks
+- **Chart Generation** - Auto-generated statistical visualizations
+- **PDF Output** - Professional PDF reports with custom styling
+- **Storybook View** - Narrative-style feature article format
+- **Timeline Visuals** - Visual timelines for major storylines
+- **Auto-Credits** - Track which agents contributed to each section
+- **Image Fetching** - Automatic team logos and player headshots
+
+See [PRESENTATION_FEATURES.md](PRESENTATION_FEATURES.md) for complete documentation.
+
 ## Installation
 
 ### Prerequisites
@@ -88,6 +101,36 @@ python cli.py --all --output today_report.md
 ```bash
 python cli.py --list-sports
 ```
+
+#### Presentation Options (NEW!)
+
+Create reports with different styles and formats:
+
+```bash
+# ESPN-style report with charts and PDF
+python cli.py --sports nba --theme espn --charts --pdf
+
+# Professional report with data-driven FiveThirtyEight style
+python cli.py --sports nfl --theme 538 --tone professional --pdf
+
+# Fun, engaging report with colors and storybook format
+python cli.py --all --theme bleacher --tone fun --colors --storybook
+
+# The Athletic-style narrative with credits
+python cli.py --sports nba mlb --theme athletic --credits --pdf
+```
+
+**Available Options:**
+- `--theme` - espn, athletic, 538, bleacher (default: espn)
+- `--tone` - professional, balanced, engaging, fun (default: balanced)
+- `--colors` - Enable terminal color coding for streaks
+- `--charts` - Generate statistical visualizations
+- `--pdf` - Create PDF output
+- `--storybook` - Narrative feature article format
+- `--credits` - Show agent contribution credits
+- `--timeline` - Include timeline visualizations
+
+See [PRESENTATION_FEATURES.md](PRESENTATION_FEATURES.md) for detailed examples.
 
 ### Automated Scheduling
 
@@ -263,6 +306,7 @@ sportstatbot/
 ├── scheduler.py                # Automated report scheduler
 ├── report_generator.py         # Main report orchestrator
 ├── config.py                   # Configuration settings
+├── presentation_config.py      # Presentation themes & styles
 ├── data_fetchers/             # API clients
 │   ├── espn_fetcher.py        # ESPN data
 │   └── odds_fetcher.py        # Betting odds
@@ -270,8 +314,18 @@ sportstatbot/
 │   ├── game_analyzer.py       # Game/team analysis
 │   └── player_analyzer.py     # Player stats analysis
 ├── formatters/                # Output formatting
-│   └── slack_formatter.py     # Slack markdown
+│   ├── slack_formatter.py     # Slack markdown
+│   ├── enhanced_formatter.py  # Enhanced presentations
+│   ├── storybook_formatter.py # Narrative style
+│   └── pdf_generator.py       # PDF generation
+├── visualizers/               # Charts & visuals
+│   ├── chart_generator.py     # Statistical charts
+│   ├── image_fetcher.py       # Team logos/images
+│   └── timeline_generator.py  # Timeline visuals
 └── reports/                   # Saved reports
+    ├── charts/                # Generated charts
+    ├── images/                # Cached images
+    └── pdf/                   # PDF outputs
 ```
 
 ### Adding New Features
