@@ -308,15 +308,56 @@ python scheduler.py
 # Now get reports at 8 AM and 6 PM daily
 ```
 
+## 🔌 Advanced Features & Plugin System
+
+SportStatBot now includes a powerful plugin architecture that allows you to add advanced analytics, predictions, visualizations, and more!
+
+### Available Features
+
+**Currently Implemented Plugins:**
+- 🎯 **Game Narrative Detector** - Automatically classifies games as Comeback, Blowout, Thriller, etc.
+- 📊 **Historical Matchup Analyzer** - Analyzes head-to-head records and historical trends
+- 🏆 **Milestone Tracker** - Tracks players approaching career milestones
+
+**Coming Soon (See Roadmap):**
+- Championship probability calculator
+- Opponent style comparison database
+- Salary efficiency index
+- Weather-performance correlation
+- Multi-language output
+- Season narrative graphs
+- And 30+ more features!
+
+### Using Plugins
+
+Plugins are configured in `config/plugins.yaml`:
+
+```yaml
+plugins:
+  game_narrative_detector:
+    enabled: true
+    priority: high
+
+  historical_matchup_analyzer:
+    enabled: true
+    priority: high
+```
+
+See [PLUGIN_DEVELOPMENT_GUIDE.md](PLUGIN_DEVELOPMENT_GUIDE.md) for how to create custom plugins.
+
+See [FUTURE_FEATURES_ROADMAP.md](FUTURE_FEATURES_ROADMAP.md) for the complete feature roadmap.
+
 ## Contributing
 
-Feel free to extend and customize for your needs! Some ideas:
+Feel free to extend and customize for your needs! The plugin system makes it easy to add:
 
-- Add more sports (tennis, cricket, etc.)
-- Integrate with Discord or other platforms
-- Add historical trend analysis
-- Create web dashboard
-- Add ML predictions
+- Custom analytics and metrics
+- ML-powered predictions
+- Advanced visualizations
+- New data sources
+- Content generation features
+
+Check out the [Plugin Development Guide](PLUGIN_DEVELOPMENT_GUIDE.md) to get started!
 
 ## License
 

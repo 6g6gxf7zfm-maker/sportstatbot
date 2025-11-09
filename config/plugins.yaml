@@ -1,0 +1,87 @@
+# SportStatBot Plugin Configuration
+# Enable/disable and configure advanced features
+
+plugins:
+  # Analytics Plugins
+  historical_matchup_analyzer:
+    enabled: true
+    priority: high
+    description: "Analyzes head-to-head historical records and trends"
+
+  milestone_tracker:
+    enabled: true
+    priority: medium
+    description: "Tracks players approaching career milestones"
+    threshold_percentage: 0.95  # Alert when within 95% of milestone
+
+  style_analyzer:
+    enabled: false
+    priority: medium
+    description: "Opponent style comparison database (coming soon)"
+
+  financial_analyzer:
+    enabled: false
+    priority: medium
+    description: "Salary efficiency index (coming soon)"
+
+  clutch_analyzer:
+    enabled: false
+    priority: medium
+    description: "Clutch performance predictor (coming soon)"
+
+  # Generator Plugins
+  game_narrative_detector:
+    enabled: true
+    priority: high
+    description: "Detects game narratives (Comeback, Blowout, Thriller, etc.)"
+    min_intensity: "medium"  # Minimum intensity to report
+
+  story_classifier:
+    enabled: false
+    priority: medium
+    description: "Story DNA classifier (coming soon)"
+
+  glossary_generator:
+    enabled: false
+    priority: medium
+    description: "Auto-generate stat glossary (coming soon)"
+
+  commentary_generator:
+    enabled: false
+    priority: low
+    description: "Adds color commentary quotes (coming soon)"
+
+  # Predictor Plugins
+  championship_predictor:
+    enabled: false
+    priority: high
+    description: "Championship probability calculator (coming soon)"
+
+  game_significance_predictor:
+    enabled: false
+    priority: medium
+    description: "Predicts Game of the Year candidates (coming soon)"
+
+  streak_predictor:
+    enabled: false
+    priority: medium
+    description: "Predicts likely win/loss streaks (coming soon)"
+
+  # Visualizer Plugins
+  season_graph:
+    enabled: false
+    priority: medium
+    description: "Season narrative graph visualizer (coming soon)"
+
+  injury_timeline:
+    enabled: false
+    priority: medium
+    description: "Injury timeline visualizer (coming soon)"
+
+# Global Plugin Settings
+global:
+  enable_caching: true
+  cache_duration_hours: 24
+  max_plugins_per_category: 10
+  error_handling: "graceful"  # Options: graceful, strict, silent
+  performance_logging: true
