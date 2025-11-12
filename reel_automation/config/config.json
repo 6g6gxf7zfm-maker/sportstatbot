@@ -1,0 +1,46 @@
+{
+  "sports": ["NBA", "NFL", "MLB", "MLS", "EPL", "LaLiga", "Champions League"],
+  "exclude_sports": ["NHL", "Hockey"],
+  "posts_per_day": 5,
+  "viral_score_threshold": 7,
+  "max_reel_length": 15,
+  "output_directory": "~/Desktop/reels_ready",
+  "caption_style": "hype",
+  "optimal_post_times": ["07:30", "12:15", "18:00", "20:30", "22:00"],
+  "video_settings": {
+    "resolution": [1080, 1920],
+    "format": "mp4",
+    "fps": 30,
+    "quality": "high",
+    "audio_enabled": true
+  },
+  "processing_schedule": {
+    "weekday_times": ["18:00-23:59", "12:00-16:00"],
+    "weekend_times": ["12:00-23:59"],
+    "check_interval_minutes": 30
+  },
+  "api_keys": {
+    "anthropic": "",
+    "espn": "",
+    "supabase_url": "",
+    "supabase_key": ""
+  },
+  "caption_format": {
+    "hook_style": "ALL CAPS + emoji",
+    "max_hook_words": 3,
+    "context_lines": 1,
+    "include_engagement_question": true,
+    "hashtag_count": 15,
+    "hashtag_distribution": {
+      "broad": 5,
+      "community": 5,
+      "specific": 5
+    }
+  },
+  "viral_score_weights": {
+    "game_importance": 0.3,
+    "play_type": 0.25,
+    "player_popularity": 0.25,
+    "historical_engagement": 0.2
+  }
+}
