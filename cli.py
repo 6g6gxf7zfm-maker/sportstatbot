@@ -24,6 +24,9 @@ Examples:
   # Generate quick update for NFL only
   python cli.py --sports nfl --quick
 
+  # Generate custom team analysis
+  python cli.py --sports nba --team "Lakers"
+
   # Save report to file
   python cli.py --all --output today_report.md
 
@@ -64,6 +67,13 @@ Examples:
         help='List all available sports'
     )
 
+    parser.add_argument(
+        '--team',
+        '-t',
+        type=str,
+        help='Generate custom analysis for a specific team (requires --sports with single sport)'
+    )
+
     args = parser.parse_args()
 
     # Handle list sports
@@ -82,12 +92,23 @@ Examples:
         print("\nError: Must specify either --all or --sports")
         return 1
 
+    # Validate team analysis arguments
+    if args.team:
+        if not args.sports or len(args.sports) != 1:
+            print("\nError: --team requires exactly one sport specified with --sports")
+            return 1
+
     # Initialize generator
     generator = SportsReportGenerator()
 
     try:
+        # Handle team-specific analysis
+        if args.team and args.sports:
+            sport = args.sports[0]
+            print(f"\n{config.SPORTS_CONFIG[sport]['emoji']} Generating custom analysis for {args.team} in {sport.upper()}...\n")
+            report = generator.generate_custom_analysis(sport, args.team)
         # Generate report
-        if args.all:
+        elif args.all:
             print("\n🏆 Generating full sports report for all leagues...\n")
             report = generator.generate_full_report()
         elif args.sports:

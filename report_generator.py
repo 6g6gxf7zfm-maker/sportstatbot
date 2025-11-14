@@ -214,9 +214,139 @@ class SportsReportGenerator:
         """
         print(f"Generating custom analysis for {team} in {sport.upper()}...")
 
-        # This is a placeholder for custom team analysis
-        # Would need team ID resolution and more detailed queries
-        return f"Custom analysis for {team} - Feature coming soon!"
+        try:
+            # Get general sport data first
+            sport_data = self._generate_sport_data(sport)
+
+            if not sport_data:
+                return f"Unable to fetch data for {sport.upper()}"
+
+            # Find team-specific information from the data
+            team_lower = team.lower()
+            team_games = []
+            team_record = None
+            team_news = []
+            team_players = []
+
+            # Filter recent games involving this team
+            for game in sport_data.get('recent_games', []):
+                home_team = game.get('home_team', '').lower()
+                away_team = game.get('away_team', '').lower()
+
+                if team_lower in home_team or team_lower in away_team:
+                    team_games.append(game)
+
+            # Filter standout players from this team
+            for player in sport_data.get('standout_players', []):
+                player_team = player.get('team', '').lower()
+                if team_lower in player_team:
+                    team_players.append(player)
+
+            # Filter team-relevant news
+            for news_item in sport_data.get('injuries', []) + sport_data.get('roster_changes', []):
+                headline = news_item.get('headline', '').lower()
+                description = news_item.get('description', '').lower()
+
+                if team_lower in headline or team_lower in description:
+                    team_news.append(news_item)
+
+            # Format the custom report
+            sport_config = config.SPORTS_CONFIG.get(sport, {})
+            emoji = sport_config.get('emoji', '🏀')
+            display_name = sport_config.get('display_name', sport.upper())
+
+            report = []
+            report.append(f"## {emoji} {team.upper()} - {display_name} Team Analysis")
+            report.append(f"_Generated {datetime.now().strftime('%B %d, %Y at %I:%M %p')}_\n")
+
+            # Recent games section
+            if team_games:
+                report.append("### 📊 Recent Games")
+                for game in team_games[:5]:
+                    home_team = game.get('home_team')
+                    away_team = game.get('away_team')
+                    home_score = game.get('home_score')
+                    away_score = game.get('away_score')
+                    status = game.get('status', 'Final')
+
+                    game_result = f"• **{away_team}** {away_score} @ **{home_team}** {home_score}"
+
+                    # Add context for the team
+                    if team_lower in home_team.lower():
+                        if home_score > away_score:
+                            game_result += " ✅ WIN"
+                        elif home_score < away_score:
+                            game_result += " ❌ LOSS"
+                    elif team_lower in away_team.lower():
+                        if away_score > home_score:
+                            game_result += " ✅ WIN"
+                        elif away_score < home_score:
+                            game_result += " ❌ LOSS"
+
+                    report.append(game_result)
+                report.append("")
+            else:
+                report.append("### 📊 Recent Games")
+                report.append("• No recent games found for this team\n")
+
+            # Team performers section
+            if team_players:
+                report.append("### ⭐ Top Performers")
+                for player in team_players[:5]:
+                    name = player.get('player', 'Unknown')
+                    stat = player.get('stat_category', '')
+                    value = player.get('value', '')
+                    report.append(f"• **{name}** - {value} {stat}")
+                report.append("")
+
+            # Team news section
+            if team_news:
+                report.append("### 📰 Team News & Updates")
+                for news in team_news[:5]:
+                    headline = news.get('headline', 'Unknown')
+                    news_type = news.get('type', '')
+                    icon = '🏥' if 'injury' in news_type else '🆕'
+                    report.append(f"• {icon} {headline}")
+                report.append("")
+
+            # Must-watch upcoming games
+            team_upcoming = []
+            for matchup in sport_data.get('must_watch', []):
+                home_team = matchup.get('home_team', '').lower()
+                away_team = matchup.get('away_team', '').lower()
+
+                if team_lower in home_team or team_lower in away_team:
+                    team_upcoming.append(matchup)
+
+            if team_upcoming:
+                report.append("### 👀 Upcoming Key Matchups")
+                for matchup in team_upcoming[:3]:
+                    game = matchup.get('game', 'Unknown')
+                    date_str = matchup.get('date', '')
+                    reasons = matchup.get('reasons', [])
+
+                    try:
+                        dt = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+                        formatted_date = dt.strftime("%a, %b %d at %I:%M %p")
+                    except:
+                        formatted_date = "TBD"
+
+                    report.append(f"• **{game}**")
+                    report.append(f"  {formatted_date}")
+                    if reasons:
+                        report.append(f"  _{', '.join(reasons)}_")
+                report.append("")
+
+            if not team_games and not team_players and not team_news:
+                report.append(f"\n_No recent data found for '{team}'. Please verify the team name/abbreviation._")
+
+            return "\n".join(report)
+
+        except Exception as e:
+            print(f"Error generating custom analysis: {e}")
+            import traceback
+            traceback.print_exc()
+            return f"Error generating analysis for {team}: {str(e)}"
 
     def save_report(self, report: str, filename: Optional[str] = None) -> str:
         """

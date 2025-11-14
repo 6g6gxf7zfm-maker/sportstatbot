@@ -25,6 +25,7 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 - **On-Demand Reports** - Generate reports whenever you want
 - **Automated Scheduling** - Daily morning and evening updates
 - **Sport-Specific** - Focus on just the sports you care about
+- **Team-Specific Analysis** - Deep dive into your favorite teams
 - **Quick Updates** - Fast summaries for busy schedules
 - **Slack Integration** - Post directly to Slack channels
 
@@ -76,6 +77,16 @@ python cli.py --sports nfl nba mlb
 ```bash
 # Fast summary instead of full analysis
 python cli.py --sports nfl --quick
+```
+
+#### Custom Team Analysis
+```bash
+# Generate detailed analysis for a specific team
+python cli.py --sports nba --team "Lakers"
+python cli.py --sports nfl --team "Chiefs"
+
+# Works with any team name or abbreviation
+python cli.py --sports mlb --team "Yankees"
 ```
 
 #### Save to File
@@ -306,6 +317,13 @@ python cli.py --sports nfl nba nhl
 # Set it and forget it
 python scheduler.py
 # Now get reports at 8 AM and 6 PM daily
+```
+
+### Example 5: Team-Specific Analysis
+```bash
+# Deep dive into your favorite team
+python cli.py --sports nba --team "Lakers"
+# Get recent games, top performers, news, and upcoming matchups
 ```
 
 ## Contributing
