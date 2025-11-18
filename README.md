@@ -1,336 +1,279 @@
-# 🏆 SportStatBot
+# Instagram Reel Automation 🎬
 
-Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, NHL, MLS, international soccer, and golf. Get detailed, ESPN-style analysis reports delivered in beautiful Slack markdown format.
+AI-powered automation tool for creating **viral sports videos** for Instagram Reels. Generate engaging 15-30 second videos with AI scripts, voiceovers, and trending hashtags - ready for manual posting!
 
-## Features
+## Features ✨
 
-### 🎯 Comprehensive Coverage
-- **NFL** 🏈 - Game results, player stats, playoff implications
-- **NBA** 🏀 - Scores, standout performances, team trends
-- **MLB** ⚾ - Latest results, pitching performances, division standings
-- **NHL** 🏒 - Goals, assists, goalie stats, playoff picture
-- **MLS** ⚽ - Match results, golden boot race, table standings
-- **Soccer** ⚽ - Premier League and international coverage
-- **Golf** ⛳ - PGA Tour leaderboards and tournament coverage
+- 🤖 **AI Script Generation** - GPT-4 powered sports content
+- 🎥 **Automatic Video Creation** - Professional 9:16 Reels format
+- 🎙️ **AI Voiceover** - Text-to-speech narration
+- ✍️ **Animated Text Overlays** - Eye-catching captions
+- 🏷️ **Trending Hashtags** - Auto-generated viral hashtag sets
+- 🎨 **Custom Templates** - Multiple viral video formats
+- ⚡ **Batch Creation** - Generate multiple reels at once
+- 📝 **Manual Posting Workflow** - Full control over when to post
 
-### 📊 Advanced Analysis
-- **Key Trends** - Hot streaks 🔥, cold streaks ❄️, momentum shifts
-- **Standout Players** - Top performances with detailed stats
-- **Injury Reports** ⚠️ - Latest injury updates and return timelines
-- **Roster Changes** - Trades, signings, and lineup adjustments
-- **Betting Insights** 💰 - Point spreads, over/unders, value picks
-- **Must-Watch Matchups** 👀 - Upcoming games you can't miss
+## Sports Categories 🏀
 
-### 🤖 Flexible Usage
-- **On-Demand Reports** - Generate reports whenever you want
-- **Automated Scheduling** - Daily morning and evening updates
-- **Sport-Specific** - Focus on just the sports you care about
-- **Quick Updates** - Fast summaries for busy schedules
-- **Slack Integration** - Post directly to Slack channels
+- NBA Basketball
+- NFL Football
+- MLB Baseball
+- NHL Hockey
+- Soccer/Football
+- Tennis
+- Boxing/MMA
+- Olympics
+- College Sports
+- General Sports Facts
 
-## Installation
+## Video Templates 🎬
+
+1. **Stat Reveal** - Mind-blowing statistics
+2. **Prediction** - Bold sports predictions
+3. **Fact Drop** - Surprising facts
+4. **VS Comparison** - Player/team comparisons
+5. **Top 5 List** - Rankings and lists
+6. **Did You Know** - Trivia format
+7. **Highlight Moment** - Iconic moments
+
+## Quick Start 🚀
 
 ### Prerequisites
-- Python 3.8 or higher
-- pip (Python package manager)
 
-### Quick Setup
+- Python 3.8+
+- OpenAI API key
+- ImageMagick (for text rendering)
 
-1. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Installation
 
-2. **Try the demo** (see what reports look like)
-   ```bash
-   python demo_report.py
-   ```
-
-3. **Configure API keys** (optional - for betting data and Slack)
-   ```bash
-   cp .env.example .env
-   # Edit .env to add API keys
-   ```
-
-That's it! See [USAGE_GUIDE.md](USAGE_GUIDE.md) for detailed usage instructions.
-
-## Usage
-
-### Command Line Interface
-
-#### Generate Full Report (All Sports)
+1. **Clone the repository**
 ```bash
-python cli.py --all
+git clone <your-repo-url>
+cd sportstatbot
 ```
 
-#### Generate Report for Specific Sports
+2. **Install dependencies**
 ```bash
-# Single sport
-python cli.py --sports nfl
-
-# Multiple sports
-python cli.py --sports nfl nba mlb
+pip install -r requirements.txt
 ```
 
-#### Quick Updates
+3. **Install ImageMagick** (required for moviepy)
+
+**macOS:**
 ```bash
-# Fast summary instead of full analysis
-python cli.py --sports nfl --quick
+brew install imagemagick
 ```
 
-#### Save to File
+**Ubuntu/Debian:**
 ```bash
-# Save report to markdown file
-python cli.py --all --output today_report.md
+sudo apt-get install imagemagick
 ```
 
-#### List Available Sports
+**Windows:**
+Download from https://imagemagick.org/script/download.php
+
+4. **Configure API key**
 ```bash
-python cli.py --list-sports
+cp .env.example .env
+# Edit .env and add your OpenAI API key
 ```
 
-### Automated Scheduling
+### Usage
 
-Run the scheduler for automated daily reports:
-
+**Create a single reel (random category):**
 ```bash
-# Start the scheduler
-python scheduler.py
-
-# Test with immediate report
-python scheduler.py --test
+python main.py
 ```
 
-**Default Schedule:**
-- 🌅 **Morning Report**: 8:00 AM - Full recap of yesterday + today's previews
-- 🌙 **Evening Report**: 6:00 PM - Today's results and analysis
-- 🏈 **NFL Sundays**: Updates at 1:00 PM and 4:00 PM
-- 🏀 **NBA Evenings**: Updates at 7:00 PM during season
-
-### Slack Integration
-
-To post reports directly to Slack:
-
-1. Create a Slack webhook:
-   - Go to your Slack workspace settings
-   - Navigate to "Apps" → "Incoming Webhooks"
-   - Create a new webhook and copy the URL
-
-2. Add webhook to `.env`:
-   ```bash
-   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
-   ```
-
-3. Run with Slack posting:
-   ```bash
-   python scheduler.py
-   # Reports will automatically post to your Slack channel
-   ```
-
-## Configuration
-
-### Environment Variables
-
-Edit `.env` file to customize:
-
+**Create NBA reel:**
 ```bash
-# Betting Odds API (optional - get free key at https://the-odds-api.com/)
-ODDS_API_KEY=your_api_key_here
-
-# Slack Webhook (optional - for automated posting)
-SLACK_WEBHOOK_URL=your_webhook_url_here
-
-# Timezone for reports
-REPORT_TIMEZONE=America/New_York
+python main.py --category NBA
 ```
 
-### Customizing Sports
-
-Edit `config.py` to enable/disable specific sports or change display settings:
-
-```python
-SPORTS_CONFIG = {
-    'nfl': {
-        'espn_league': 'football/nfl',
-        'display_name': 'NFL',
-        'emoji': '🏈',
-        'season_active': True  # Set to False to skip
-    },
-    # ... more sports
-}
+**Create NFL prediction reel:**
+```bash
+python main.py --category NFL --template prediction
 ```
 
-## Report Format
-
-Reports are formatted in Slack-compatible markdown with:
-
-- **Section headers** for each sport
-- **Bullet points** for easy scanning
-- **Bold text** for teams and players
-- **Emoji indicators**:
-  - 🔥 Hot teams on winning streaks
-  - ❄️ Cold teams on losing streaks
-  - ⚠️ Injury updates
-  - 💰 Betting value picks
-  - 👀 Must-watch games
-  - ⭐ Standout performances
-
-### Sample Output
-
-```markdown
-# 🏆 SPORTS UPDATE - November 8, 2025
-
-## 🏈 NFL UPDATE
-
-### 📈 KEY TRENDS
-
-**🔥 Hot Teams:**
-• Kansas City Chiefs - 5-game win streak
-• San Francisco 49ers - 4-game win streak
-
-**❄️ Cold Teams:**
-• New York Giants - 4-game losing streak
-
-### 📅 RECENT RESULTS
-
-**Notable Games:**
-• Kansas City Chiefs 31, Buffalo Bills 28 👀
-  _Mahomes: 368 YDS, 3 TD | Allen: 342 YDS, 2 TD_
-
-### ⭐ STANDOUT PERFORMANCES
-
-• Patrick Mahomes (Chiefs) - 368 passing yards
-• Christian McCaffrey (49ers) - 145 rushing yards
-• Justin Jefferson (Vikings) - 156 receiving yards
-
-### 💰 BETTING INSIGHTS
-
-**Value Picks:**
-• **Cowboys vs Eagles**
-  Cowboys +7.5 (-110) - Better odds than market average
-
-### 👀 MUST-WATCH MATCHUPS
-
-• **Cowboys vs Eagles** - Sun 8:20 PM
-  _Division game, Playoff implications_
+**Create 5 reels in batch:**
+```bash
+python main.py --batch 5
 ```
 
-## API Data Sources
+**Create without voiceover:**
+```bash
+python main.py --category Soccer --no-voiceover
+```
 
-SportStatBot uses free and public APIs:
+**List all options:**
+```bash
+python main.py --list
+```
 
-- **ESPN API** (unofficial) - Game scores, standings, news
-- **The Odds API** (optional) - Betting lines and odds
-- **MLB Stats API** - Baseball statistics
-- **NHL API** - Hockey data
+## Output 📹
 
-All APIs are accessed respectfully with rate limiting and caching.
+Each reel generation creates:
 
-## Troubleshooting
+- **Video file** (.mp4) - Ready to upload to Instagram
+- **Metadata file** (.json) - Script, hashtags, and caption
+- **Posting instructions** - Displayed in terminal
 
-### ESPN API Returns 403 Errors
-ESPN's unofficial API sometimes blocks requests or has rate limits. This is normal and happens to all unofficial API users.
+Example output:
+```
+output/
+  ├── nba_stat_reveal_20240118_143022.mp4
+  ├── nba_stat_reveal_20240118_143022_metadata.json
+  └── batch_summary.json
+```
 
-**Solutions:**
-- Wait 15-30 minutes and try again (rate limits reset)
-- Try during off-peak hours
-- Use `python demo_report.py` to see the report format with sample data
-- The bot handles API failures gracefully
+## Manual Posting Workflow 📱
 
-**Note:** This bot uses ESPN's publicly accessible but unofficial API endpoints. If ESPN changes their API or implements stricter rate limiting, some features may be temporarily unavailable. Alternative data sources can be added in `data_fetchers/` if needed.
+1. **Run the automation** to generate your reel
+2. **Review the video** in the output folder
+3. **Copy the caption** from terminal or metadata file
+4. **Upload to Instagram** manually
+5. **Post hashtags** in the first comment (better reach!)
 
-### No Data Showing
-- Check your internet connection
-- APIs may be temporarily down - try again in a few minutes
-- Some sports are seasonal - check if season is active
+## Project Structure 📁
 
-### Betting Data Missing
-- Betting insights require an API key from [The Odds API](https://the-odds-api.com/)
-- Free tier provides 500 requests/month
-- Reports work fine without betting data
-
-### Slack Posting Not Working
-- Verify webhook URL is correct in `.env`
-- Test webhook with a simple curl command
-- Check Slack workspace permissions
-
-## Development
-
-### Project Structure
 ```
 sportstatbot/
-├── cli.py                      # Command-line interface
-├── scheduler.py                # Automated report scheduler
-├── report_generator.py         # Main report orchestrator
-├── config.py                   # Configuration settings
-├── data_fetchers/             # API clients
-│   ├── espn_fetcher.py        # ESPN data
-│   └── odds_fetcher.py        # Betting odds
-├── analyzers/                 # Analysis logic
-│   ├── game_analyzer.py       # Game/team analysis
-│   └── player_analyzer.py     # Player stats analysis
-├── formatters/                # Output formatting
-│   └── slack_formatter.py     # Slack markdown
-└── reports/                   # Saved reports
+├── main.py                 # CLI interface
+├── script_generator.py     # AI script generation
+├── video_generator.py      # Video creation engine
+├── hashtag_generator.py    # Hashtag generation
+├── config.py              # Configuration settings
+├── requirements.txt       # Python dependencies
+├── .env.example          # Environment template
+├── output/               # Generated videos
+└── assets/               # Media assets (optional)
+    ├── music/           # Background music
+    └── images/          # Background images
 ```
 
-### Adding New Features
+## Configuration ⚙️
 
-1. **New Sport**: Add to `SPORTS_CONFIG` in `config.py`
-2. **Custom Analysis**: Extend analyzers in `analyzers/`
-3. **New Format**: Create formatter in `formatters/`
-4. **Additional APIs**: Add fetcher in `data_fetchers/`
+Edit `config.py` to customize:
 
-## Examples
+- Video dimensions (default: 1080x1920)
+- Font sizes and colors
+- Animation durations
+- Video length (15-30 seconds)
+- Output directories
 
-### Example 1: Morning Routine
-```bash
-# Get your daily sports briefing
-python cli.py --all --output morning_briefing.md
+## Advanced Usage 🔧
+
+### Custom Script Generation
+
+```python
+from script_generator import ScriptGenerator
+
+generator = ScriptGenerator()
+script = generator.generate_script(
+    category='NBA',
+    template='stat_reveal'
+)
+print(script)
 ```
 
-### Example 2: Game Day Updates
-```bash
-# Quick NFL update during Sunday games
-python cli.py --sports nfl --quick
+### Create Video from Custom Script
+
+```python
+from video_generator import VideoGenerator
+
+video_gen = VideoGenerator()
+custom_script = {
+    'hook': 'Your hook here',
+    'content': 'Your content here',
+    'cta': 'Your call-to-action',
+    'voiceover': 'Full voiceover script',
+    'category': 'NBA'
+}
+
+video_gen.create_reel(custom_script)
 ```
 
-### Example 3: Multi-Sport Evening Recap
-```bash
-# Check results for major leagues
-python cli.py --sports nfl nba nhl
+### Generate Hashtags
+
+```python
+from hashtag_generator import HashtagGenerator
+
+hashtag_gen = HashtagGenerator()
+tags = hashtag_gen.generate(category='NFL', template='prediction')
+print(hashtag_gen.format_for_comment(tags))
 ```
 
-### Example 4: Automated Daily Updates
-```bash
-# Set it and forget it
-python scheduler.py
-# Now get reports at 8 AM and 6 PM daily
-```
+## Tips for Viral Content 🔥
 
-## Contributing
+1. **Post consistently** - 1-2 reels per day
+2. **Post at peak times** - 12pm, 5pm, 9pm in your timezone
+3. **Use first comment for hashtags** - Better algorithm performance
+4. **Engage quickly** - Respond to comments in first hour
+5. **Mix content types** - Rotate through different templates
+6. **Follow trends** - Use time-based hashtags (#MondayMotivation)
+7. **Test different categories** - See what resonates with your audience
 
-Feel free to extend and customize for your needs! Some ideas:
+## Troubleshooting 🔧
 
-- Add more sports (tennis, cricket, etc.)
-- Integrate with Discord or other platforms
-- Add historical trend analysis
-- Create web dashboard
-- Add ML predictions
+**"ModuleNotFoundError: No module named 'moviepy'"**
+- Run: `pip install -r requirements.txt`
 
-## License
+**"ImageMagick not found"**
+- Install ImageMagick (see installation section)
+- On Windows, add to PATH
 
-This project is for personal use. Please respect API terms of service and rate limits.
+**"OpenAI API error"**
+- Check your API key in `.env` file
+- Ensure you have API credits
 
-## Credits
+**Video rendering slow**
+- Reduce video quality in `video_generator.py`
+- Use `--no-voiceover` flag for faster generation
 
-Built with:
-- ESPN's unofficial API for sports data
-- The Odds API for betting information
-- Python and open source libraries
+**Text not appearing in video**
+- Install ImageMagick
+- Check font availability on your system
+
+## Limitations ⚠️
+
+- Requires OpenAI API key (costs apply)
+- Manual posting only (no direct Instagram API)
+- Basic video templates (can be extended)
+- Text-to-speech voice is robotic (upgrade to ElevenLabs for premium voice)
+
+## Future Enhancements 🚀
+
+- [ ] Background music integration
+- [ ] Stock footage/image overlays
+- [ ] More video templates
+- [ ] Premium AI voices (ElevenLabs)
+- [ ] Trending topic scraping
+- [ ] Analytics tracking
+- [ ] Custom font support
+- [ ] Video preview GUI
+
+## Contributing 🤝
+
+Pull requests welcome! Please test thoroughly before submitting.
+
+## License 📄
+
+MIT License - see LICENSE file for details
+
+## Disclaimer ⚖️
+
+This tool is for content creation only. You are responsible for:
+- Posting content manually
+- Following Instagram's terms of service
+- Ensuring content accuracy
+- Respecting copyright/licensing
+
+## Support 💬
+
+Issues? Questions? Open a GitHub issue!
 
 ---
 
-**Enjoy your sports updates! 🏆🏈🏀⚾🏒⚽⛳**
+**Made with ❤️ for sports content creators**
 
-For issues or questions, check the code comments or create an issue in the repository.
+Happy creating! 🎬🏀🏈⚽
