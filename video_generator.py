@@ -4,11 +4,17 @@ Creates viral sports videos with text overlays and animations
 """
 import os
 import random
-from moviepy.editor import (
-    VideoClip, TextClip, CompositeVideoClip,
-    AudioFileClip, concatenate_videoclips, ColorClip
-)
-from moviepy.video.fx import fadein, fadeout
+try:
+    # Try newer moviepy API (2.x)
+    from moviepy import VideoClip, TextClip, CompositeVideoClip, AudioFileClip, ColorClip
+    from moviepy import concatenate_videoclips
+except ImportError:
+    # Fallback to older API (1.x)
+    from moviepy.editor import (
+        VideoClip, TextClip, CompositeVideoClip,
+        AudioFileClip, concatenate_videoclips, ColorClip
+    )
+
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 from gtts import gTTS
@@ -168,23 +174,19 @@ class VideoGenerator:
                           animation=None, start_time=0):
         """Create animated text clip"""
         try:
-            # Create text clip
+            # Create text clip (simplified for moviepy 2.x compatibility)
             txt_clip = TextClip(
-                text,
-                fontsize=fontsize,
+                text=text,
+                font_size=fontsize,
                 color=color,
-                font='Arial-Bold',
                 size=(VIDEO_WIDTH - 100, None),
-                method='caption',
-                align='center'
+                method='caption'
             )
 
             # Apply animation
             if animation == 'zoom':
                 txt_clip = txt_clip.resize(lambda t: 1 + 0.3 * np.sin(t * 3))
-            elif animation == 'fade':
-                txt_clip = fadein(txt_clip, 0.5)
-                txt_clip = fadeout(txt_clip, 0.5)
+            # Note: fade effects removed for compatibility with moviepy 2.x
 
             # Position
             if position == 'center':
@@ -201,7 +203,7 @@ class VideoGenerator:
         except Exception as e:
             print(f"Error creating text clip: {e}")
             # Return empty clip as fallback
-            return ColorClip(size=(1, 1), color=(0, 0, 0), duration=duration).set_opacity(0)
+            return ColorClip(size=(1, 1), color=(0, 0, 0), duration=duration).with_opacity(0)
 
     def _create_scrolling_text(self, text, start_time, duration, fontsize):
         """Create scrolling text effect"""
@@ -223,18 +225,14 @@ class VideoGenerator:
             formatted_text = '\n'.join(lines)
 
             txt_clip = TextClip(
-                formatted_text,
-                fontsize=fontsize,
+                text=formatted_text,
+                font_size=fontsize,
                 color=PRIMARY_COLOR,
-                font='Arial-Bold',
                 size=(VIDEO_WIDTH - 150, None),
-                method='caption',
-                align='center'
+                method='caption'
             )
 
-            # Fade in/out
-            txt_clip = fadein(txt_clip, 0.8)
-            txt_clip = fadeout(txt_clip, 0.8)
+            # Note: fade effects removed for compatibility with moviepy 2.x
 
             txt_clip = txt_clip.set_position('center')
             txt_clip = txt_clip.set_start(start_time).set_duration(duration)
@@ -243,7 +241,7 @@ class VideoGenerator:
 
         except Exception as e:
             print(f"Error creating scrolling text: {e}")
-            return ColorClip(size=(1, 1), color=(0, 0, 0), duration=duration).set_opacity(0)
+            return ColorClip(size=(1, 1), color=(0, 0, 0), duration=duration).with_opacity(0)
 
     def _generate_voiceover(self, text):
         """Generate AI voiceover using gTTS"""

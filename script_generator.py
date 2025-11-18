@@ -8,7 +8,13 @@ from config import OPENAI_API_KEY, SPORTS_CATEGORIES, VIDEO_TEMPLATES
 
 class ScriptGenerator:
     def __init__(self):
-        self.client = openai.OpenAI(api_key=OPENAI_API_KEY)
+        self.client = None
+        if OPENAI_API_KEY:
+            try:
+                self.client = openai.OpenAI(api_key=OPENAI_API_KEY)
+            except Exception as e:
+                print(f"Warning: Could not initialize OpenAI client: {e}")
+                print("Will use fallback scripts.")
 
     def generate_script(self, category=None, template=None, custom_prompt=None):
         """
@@ -32,6 +38,11 @@ class ScriptGenerator:
             prompt = custom_prompt
         else:
             prompt = self._build_prompt(category, template)
+
+        # Check if OpenAI client is available
+        if not self.client:
+            print("⚠️  OpenAI API key not configured. Using fallback script.")
+            return self._get_fallback_script(category, template)
 
         try:
             response = self.client.chat.completions.create(
