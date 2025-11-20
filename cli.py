@@ -5,6 +5,7 @@ import sys
 from typing import List, Optional
 
 from report_generator import SportsReportGenerator
+from viral_reel_generator import ViralEngineer
 import config
 
 
@@ -29,6 +30,15 @@ Examples:
 
   # Just print available sports
   python cli.py --list-sports
+
+  # Generate viral Instagram Reel package
+  python cli.py --viral-reel --topic "Mahomes' deep ball accuracy"
+
+  # Generate viral reel with specific tone
+  python cli.py --viral-reel --topic "LeBron's longevity" --tone emotional
+
+  # Save viral reel package to JSON file
+  python cli.py --viral-reel --topic "Curry's 3-point record" --output reel.json
         """
     )
 
@@ -64,6 +74,27 @@ Examples:
         help='List all available sports'
     )
 
+    # Viral Reel Generator arguments
+    parser.add_argument(
+        '--viral-reel',
+        action='store_true',
+        help='Generate viral Instagram Reel content package'
+    )
+
+    parser.add_argument(
+        '--topic',
+        type=str,
+        help='Topic for viral reel generation'
+    )
+
+    parser.add_argument(
+        '--tone',
+        type=str,
+        choices=['energetic', 'analytical', 'emotional', 'comedic'],
+        default='energetic',
+        help='Tone for viral reel (default: energetic)'
+    )
+
     args = parser.parse_args()
 
     # Handle list sports
@@ -75,6 +106,41 @@ Examples:
             print(f"  {emoji} {sport_key:10} - {name}")
         print()
         return 0
+
+    # Handle viral reel generation
+    if args.viral_reel:
+        if not args.topic:
+            parser.print_help()
+            print("\nError: --topic is required for viral reel generation")
+            return 1
+
+        print(f"\n🎬 Generating viral reel package for: {args.topic}")
+        print(f"📊 Tone: {args.tone}\n")
+
+        try:
+            engineer = ViralEngineer()
+            result_json = engineer.generate_json(args.topic, args.tone)
+
+            # Save to file if output specified
+            if args.output:
+                import os
+                output_path = args.output
+                with open(output_path, 'w', encoding='utf-8') as f:
+                    f.write(result_json)
+                print(f"✅ Viral reel package saved to: {output_path}\n")
+
+            # Always print to console
+            print("="*80)
+            print(result_json)
+            print("="*80 + "\n")
+
+            return 0
+
+        except Exception as e:
+            print(f"\n❌ Error generating viral reel: {e}")
+            import traceback
+            traceback.print_exc()
+            return 1
 
     # Validate arguments
     if not args.all and not args.sports:

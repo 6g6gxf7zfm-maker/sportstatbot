@@ -4,6 +4,18 @@ Your expert sports analyst with 20+ years of experience covering NFL, NBA, MLB, 
 
 ## Features
 
+### 🎬 NEW: Viral Reel Generator (Viral Engineer v1.0)
+Transform any sports topic into a **fully viral-ready Instagram Reel creative package**:
+- **5 Viral Hooks** - Auto-scored for curiosity, controversy, and clarity
+- **Best Hook Auto-Selection** - AI-powered engagement scoring
+- **12-Second High-Retention Script** - Structured for maximum watch time
+- **Engagement Caption** - Designed to spark comments and debate
+- **15 Viral Hashtags** - Mix of broad and niche for optimal reach
+- **Viral Scoring Engine** - Rate your content on 4 key pillars
+- **Clean JSON Output** - Ready for automation and integration
+
+**Tones Available**: Energetic, Analytical, Emotional, Comedic
+
 ### 🎯 Comprehensive Coverage
 - **NFL** 🏈 - Game results, player stats, playoff implications
 - **NBA** 🏀 - Scores, standout performances, team trends
@@ -87,6 +99,61 @@ python cli.py --all --output today_report.md
 #### List Available Sports
 ```bash
 python cli.py --list-sports
+```
+
+### Viral Reel Generator
+
+#### Generate Viral Reel Package
+```bash
+# Basic usage - energetic tone (default)
+python cli.py --viral-reel --topic "Mahomes' no-look passes"
+
+# With specific tone
+python cli.py --viral-reel --topic "LeBron's longevity" --tone emotional
+
+# Available tones: energetic, analytical, emotional, comedic
+python cli.py --viral-reel --topic "Curry's 3-point record" --tone analytical
+
+# Save to JSON file
+python cli.py --viral-reel --topic "NFL playoff race" --output viral_reel.json
+```
+
+#### What You Get
+Each viral reel package includes:
+
+1. **5 Viral Hooks** - Scored on curiosity, controversy, clarity
+2. **Best Hook** - Auto-selected using engagement formula
+3. **12-Second Script** - Structured for high retention:
+   - 0-1.5s: Hook
+   - 1.5-3s: Surprise twist
+   - 3-6s: Proof/stat
+   - 6-10s: Punchy conclusion
+   - 10-12s: Loop closer
+4. **Caption** - Under 15 words, debate-inducing
+5. **15 Hashtags** - Mix of broad and niche
+6. **Viral Scores** - Rated on curiosity, emotion, debate, replayability
+
+#### Example Output
+```json
+{
+  "topic": "Patrick Mahomes' no-look passes",
+  "best_hook": "Nobody's talking about this fact",
+  "all_hooks": [...],
+  "script": [
+    {"time": "0-1.5", "text": "Nobody's talking about this fact"},
+    {"time": "1.5-3", "text": "Here's what makes it insane..."},
+    ...
+  ],
+  "caption": "Agree or nah?",
+  "hashtags": ["viral", "fyp", "sports", ...],
+  "scores": {
+    "curiosity": 6,
+    "emotion": 7,
+    "debate": 6,
+    "replayability": 10,
+    "total": 29
+  }
+}
 ```
 
 ### Automated Scheduling
@@ -262,6 +329,7 @@ sportstatbot/
 ├── cli.py                      # Command-line interface
 ├── scheduler.py                # Automated report scheduler
 ├── report_generator.py         # Main report orchestrator
+├── viral_reel_generator.py     # Viral Reel Generator (NEW!)
 ├── config.py                   # Configuration settings
 ├── data_fetchers/             # API clients
 │   ├── espn_fetcher.py        # ESPN data
@@ -308,6 +376,18 @@ python scheduler.py
 # Now get reports at 8 AM and 6 PM daily
 ```
 
+### Example 5: Generate Viral Reel Content
+```bash
+# Create viral Instagram Reel package for a trending sports topic
+python cli.py --viral-reel --topic "Mahomes' deep ball accuracy" --tone energetic
+
+# Emotional angle for legendary moments
+python cli.py --viral-reel --topic "Kobe's farewell game" --tone emotional
+
+# Save package to JSON for automation
+python cli.py --viral-reel --topic "NBA dunk contest" --output viral_content.json
+```
+
 ## Contributing
 
 Feel free to extend and customize for your needs! Some ideas:
@@ -317,6 +397,9 @@ Feel free to extend and customize for your needs! Some ideas:
 - Add historical trend analysis
 - Create web dashboard
 - Add ML predictions
+- Extend Viral Reel Generator with more tones and templates
+- Integrate with TikTok, YouTube Shorts, or other platforms
+- Add A/B testing for hooks and captions
 
 ## License
 
